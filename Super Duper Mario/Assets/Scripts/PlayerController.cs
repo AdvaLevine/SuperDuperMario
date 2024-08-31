@@ -6,6 +6,20 @@ public class PlayerController : Singleton<PlayerController>
 {
 
     [SerializeField] private GameObject _playerPrefab;
+    
+    
+    //[SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
+    
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce = 4f;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+
+    private bool facingRight = true;
+    private float moveInput;
+    private bool isGrounded;
+
     private Vector3 _initialPosition = new Vector3(0, 0, 0);
     private Rigidbody2D _rb;
 
@@ -19,11 +33,17 @@ public class PlayerController : Singleton<PlayerController>
             _rb = player.AddComponent<Rigidbody2D>();
         }
 
-        BoxCollider2D collider = player.GetComponent<BoxCollider2D>();
-        if (collider == null)
-        {
-            collider = player.AddComponent<BoxCollider2D>();
-        }
+        //BoxCollider2D collider = player.GetComponent<BoxCollider2D>();
+        
+        // // Ensure GroundCheck is assigned
+        // if (groundCheck == null)
+        // {
+        //     // Create a new GroundCheck object if not assigned
+        //     GameObject gc = new GameObject("GroundCheck");
+        //     gc.transform.parent = transform;
+        //     gc.transform.localPosition = new Vector3(0, -1f, 0); // Adjust position as needed
+        //     groundCheck = gc.transform;
+        // }
     }
     
     private void OnCollisionEnter2D(Collision2D collision)
@@ -32,7 +52,6 @@ public class PlayerController : Singleton<PlayerController>
         {
             Debug.Log("Mario has landed on the floor.");
             // Here, ensure that velocity in the Y direction is set to zero
-            _rb.velocity = new Vector2(_rb.velocity.x, 0);
         }
     }
 
@@ -46,6 +65,58 @@ public class PlayerController : Singleton<PlayerController>
     // Update is called once per frame
     void Update()
     {
-        
+        moveInput = Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+
+        //HandleAnimations();
     }
+
+    private void HandleAnimations()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void Jump()
+    {
+        // Apply jump force
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+        // Optionally, trigger jump animation
+        //if (animator != null)
+        //    animator.SetTrigger("Jump");
+    }
+    
+    private void FixedUpdate()
+    {
+        // Check if grounded
+        //isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+
+        // Move the player
+        Move();
+    }
+    
+    private void Move()
+    {
+        // Set horizontal velocity
+        _rb.velocity = new Vector2(moveInput * moveSpeed, _rb.velocity.y);
+
+        // Flip the sprite based on movement direction
+        if (moveInput > 0 && !facingRight)
+            Flip();
+        else if (moveInput < 0 && facingRight)
+            Flip();
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+    
+    
 }

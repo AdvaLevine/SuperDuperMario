@@ -6,16 +6,18 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
 
-    [SerializeField] private GameObject _floorPrefab;
+    [SerializeField] private GameObject _groundPrefab;
+    [SerializeField] private GameObject _BackgroundPrefab;
 
     private void Awake()
     {
-        GameObject floor = Instantiate(_floorPrefab, new Vector3(0.4f, -0.3f, 0), Quaternion.identity);
-        BoxCollider2D collider = floor.GetComponent<BoxCollider2D>();
-        if (collider == null)
-        {
-            collider = floor.AddComponent<BoxCollider2D>();
-        }
+        GameObject background = Instantiate(_BackgroundPrefab, new Vector3(0, -4.5f, 0), Quaternion.identity);
+        GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
+        ground.transform.localScale = new Vector3(30, 1, 1); // Scale width to 10 units, height to 1 unit
+        Material groundMaterial = new Material(Shader.Find("Unlit/Transparent"));
+        groundMaterial.mainTexture = _groundPrefab.GetComponent<SpriteRenderer>().sprite.texture;
+        groundMaterial.mainTextureScale = new Vector2(30, 1); // Tiling X = 10, Y = 1
+        ground.GetComponent<SpriteRenderer>().material = groundMaterial;
 
     }
     
