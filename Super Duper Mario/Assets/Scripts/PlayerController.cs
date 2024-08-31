@@ -6,18 +6,19 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private GameObject _playerPrefab;
     
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpForce = 4f;
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float moveSpeed = 5f;//the speed of the player
+    [SerializeField] private float jumpForce = 6f;//the force of the jump
+    [SerializeField] private LayerMask groundLayer;//the layer the player can jump from
+    [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
 
-    private bool facingRight = true;
-    private float moveInput;
-    private bool isGrounded;
+    private bool facingRight = true;//check if the player is facing right
+    private float moveInput;//the input for the movement
+    private bool isGrounded;//check if the player is on the ground
 
-    private Vector3 _initialPosition = new Vector3(-10f, 0, 0);
-    private Rigidbody2D _rb;
-    GameObject _player;
+    private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
+    private Rigidbody2D _rb;    //the rigidbody of the player
+    GameObject _player;     //the player object
 
 
     private void Awake()
@@ -35,7 +36,6 @@ public class PlayerController : Singleton<PlayerController>
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -51,7 +51,10 @@ public class PlayerController : Singleton<PlayerController>
         {
             Jump();
         }
-
+        if (_rb.velocity.y <= 0) // When falling down
+        {
+            _rb.gravityScale = 1; // Reset gravity scale
+        }
         //HandleAnimations();
     }
 
@@ -62,8 +65,8 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Jump()
     {
+        _rb.gravityScale = jumpGravityScale;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-        
     }
     
     private void FixedUpdate()

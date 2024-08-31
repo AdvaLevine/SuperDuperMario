@@ -17,6 +17,7 @@ public class CameraFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         _cameraHeight = 2f * Camera.main.orthographicSize;
         _cameraWidth = _cameraHeight * Camera.main.aspect;
         
