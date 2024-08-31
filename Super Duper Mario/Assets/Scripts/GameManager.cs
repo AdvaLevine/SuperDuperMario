@@ -11,12 +11,12 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
-        GameObject background = Instantiate(_BackgroundPrefab, new Vector3(0, -4.5f, 0), Quaternion.identity);
+        GameObject background = Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
-        ground.transform.localScale = new Vector3(30, 1, 1); // Scale width to 10 units, height to 1 unit
+        ground.transform.localScale = new Vector3(60, 1, 1); 
         Material groundMaterial = new Material(Shader.Find("Unlit/Transparent"));
         groundMaterial.mainTexture = _groundPrefab.GetComponent<SpriteRenderer>().sprite.texture;
-        groundMaterial.mainTextureScale = new Vector2(30, 1); // Tiling X = 10, Y = 1
+        groundMaterial.mainTextureScale = new Vector2(60, 1); 
         ground.GetComponent<SpriteRenderer>().material = groundMaterial;
 
     }

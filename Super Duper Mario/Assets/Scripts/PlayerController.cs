@@ -9,7 +9,7 @@ public class PlayerController : Singleton<PlayerController>
     
     
     //[SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
+    //[SerializeField] private LayerMask groundLayer;
     
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
