@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Floor
+  - Obstacle
+  - Monster
+  - Ground
+  - Background
   layers:
   - Default
   - TransparentFX

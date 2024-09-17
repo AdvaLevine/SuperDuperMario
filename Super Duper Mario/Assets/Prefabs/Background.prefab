@@ -1379,7 +1379,7 @@ GameObject:
   - component: {fileID: 2330449065682578512}
   m_Layer: 0
   m_Name: Background
-  m_TagString: Untagged
+  m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1820,7 +1820,7 @@ GameObject:
   - component: {fileID: 6380003951235859730}
   m_Layer: 3
   m_Name: Brick Wall
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2048,7 +2048,7 @@ Transform:
   m_GameObject: {fileID: 1639566650782012138}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.72, y: 0.697, z: 0.010817671}
+  m_LocalPosition: {x: 11.72, y: 1.3860002, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2392,7 +2392,7 @@ Transform:
   m_GameObject: {fileID: 1960718993502900943}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.86, y: 1.271, z: 0.010817671}
+  m_LocalPosition: {x: 10.86, y: 1.96, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4830,7 +4830,7 @@ Transform:
   m_GameObject: {fileID: 3831450874845000345}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.554, y: 0.832, z: 0.010817671}
+  m_LocalPosition: {x: -9.554, y: 1.31, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5258,7 +5258,7 @@ Transform:
   m_GameObject: {fileID: 4039931961527605807}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.829, y: 1.286, z: 0.010817671}
+  m_LocalPosition: {x: -1.81, y: 1.53, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7398,7 +7398,7 @@ Transform:
   m_GameObject: {fileID: 5759407985805497782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.262, y: 1.45, z: 0.010817671}
+  m_LocalPosition: {x: -8.262, y: 1.8, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8468,7 +8468,7 @@ Transform:
   m_GameObject: {fileID: 7039880763732023965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.718316, y: 0.765, z: 0.010817671}
+  m_LocalPosition: {x: -2.7, y: 1.07, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8584,7 +8584,7 @@ GameObject:
   - component: {fileID: 3145651563992210586}
   m_Layer: 3
   m_Name: tube
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8881,7 +8881,7 @@ GameObject:
   - component: {fileID: 5291331774192596295}
   m_Layer: 0
   m_Name: mario castle
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9264,7 +9264,7 @@ GameObject:
   - component: {fileID: 8886699112015399474}
   m_Layer: 3
   m_Name: tube (1)
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9562,7 +9562,7 @@ GameObject:
   - component: {fileID: 2502884591266010138}
   m_Layer: 3
   m_Name: Brick Wall (31)
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11670,7 +11670,7 @@ Transform:
   m_GameObject: {fileID: 9169788368157320689}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.04, y: 0.709, z: 0.010817671}
+  m_LocalPosition: {x: 10.04, y: 1.3980001, z: 0.010817671}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -20,7 +20,7 @@ public abstract class Singleton<T> : MonoBehaviour where T: MonoBehaviour
                 _instance = singletonObject.AddComponent<T>();
             }
                 
-            DontDestroyOnLoad(_instance.gameObject);
+            //DontDestroyOnLoad(_instance.gameObject);
             return _instance;
         }
     }

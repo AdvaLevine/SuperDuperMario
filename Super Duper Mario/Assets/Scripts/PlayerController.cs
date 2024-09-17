@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
@@ -19,6 +20,55 @@ public class PlayerController : Singleton<PlayerController>
     private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
     private Rigidbody2D _rb;    //the rigidbody of the player
     GameObject _player;     //the player object
+    
+    private float jumpForceMultiplier = 1f;
+    private float coinMultiplier = 1f;
+
+    private Coroutine jumpForceCoroutine;
+    private Coroutine coinMultiplierCoroutine;
+
+    public void SetJumpForceMultiplier(float multiplier, float duration = 5f)
+    {
+        if (jumpForceCoroutine != null)
+        {
+            StopCoroutine(jumpForceCoroutine);
+        }
+        jumpForceMultiplier = multiplier;
+        jumpForceCoroutine = StartCoroutine(ResetJumpForceMultiplierAfterTime(duration));
+    }
+
+    private IEnumerator ResetJumpForceMultiplierAfterTime(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        jumpForceMultiplier = 1f;
+    }
+
+    public void SetCoinMultiplier(float multiplier, float duration)
+    {
+        if (coinMultiplierCoroutine != null)
+        {
+            StopCoroutine(coinMultiplierCoroutine);
+        }
+        coinMultiplier = multiplier;
+        coinMultiplierCoroutine = StartCoroutine(ResetCoinMultiplierAfterTime(duration));
+    }
+
+    private IEnumerator ResetCoinMultiplierAfterTime(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        coinMultiplier = 1f;
+    }
+
+    public float GetCoinMultiplier()
+    {
+        return coinMultiplier;
+    }
+
+    private void Jump()
+    {
+        _rb.gravityScale = jumpGravityScale;
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
+    }
 
 
     private void Awake()
@@ -63,11 +113,11 @@ public class PlayerController : Singleton<PlayerController>
         throw new System.NotImplementedException();
     }
 
-    private void Jump()
-    {
-        _rb.gravityScale = jumpGravityScale;
-        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-    }
+    // private void Jump()
+    // {
+    //     _rb.gravityScale = jumpGravityScale;
+    //     _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
+    // }
     
     private void FixedUpdate()
     {
@@ -112,5 +162,24 @@ public class PlayerController : Singleton<PlayerController>
     public void SetCameraFollow(CameraFollow cameraFollow)
     {
         cameraFollow.PlayerTransform = _player.transform;
+    }
+    
+    public void Bounce()
+    {
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * 0.5f);
+    }
+
+    public void Die()
+    {
+        // נטרול השליטה בשחקן
+        enabled = false;
+        // אפשר להוסיף אנימציית מוות
+        // הצגת מסך Game Over
+        GameManager.Instance.GameOver();
+    }
+
+    public void SetPlayerActive(bool b)
+    {
+        _player.SetActive(b);
     }
 }
