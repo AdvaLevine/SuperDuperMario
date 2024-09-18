@@ -12,4 +12,5 @@ public class CastleEntrance : MonoBehaviour
             GameManager.Instance.PlayerWins();
         }
     }
+    
 }
