@@ -12,8 +12,12 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private GameObject highScoreUI;
     [SerializeField] private GameObject gameOverUI;
-
     
+    [SerializeField] private TMPro.TextMeshProUGUI _timer;  // Add reference to the UI Text
+    private float elapsedTime = 0f;          // Time since the game started
+    public GameObject timerText;
+    
+    [SerializeField] private float levelTime = 60f;  // 300 seconds for the level
     [SerializeField] private float startX = -4f; // נקודת ההתחלה של השלב
     [SerializeField] private float endX = 19f;   // נקודת הסיום של השלב
     [SerializeField] private int numberOfMonsters = 10; // מספר המפלצות שתרצה ליצור
@@ -35,12 +39,23 @@ public class GameManager : Singleton<GameManager>
     {
         ShowMainMenu();
     }
-
+    
+    private void Update()
+    {
+        if (Time.timeScale > 0f)  // Only update the timer when the game is running
+        {
+            UpdateTimer();
+        }
+    }
+    
+    
     public void StartGame()
     {
         mainMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        
+        elapsedTime = 0f;
+        timerText.SetActive(true);  // Show "Time" UI when game starts
+
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
         ground.transform.localScale = new Vector3(60, 1, 1); 
@@ -56,13 +71,27 @@ public class GameManager : Singleton<GameManager>
         
         _playerController = PlayerController.Instance;
         _playerController.SetCameraFollow(_cameraFollow);
-
+        
         SpawnMonsters();
     }
+    
+    private void UpdateTimer()
+    {
+        // Increment the elapsed time
+        elapsedTime += Time.deltaTime;
 
+        // Convert the time to minutes and seconds
+        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+
+        // Update the text field with the formatted time
+        _timer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+    
     public void ShowMainMenu()
     {
         Time.timeScale = 0f;
+        timerText.SetActive(false); // Hide "Time" UI when in the menu
         mainMenuUI.SetActive(true);
     }
 
@@ -111,8 +140,6 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
-    
-    
     public void GameOver()
     {
         // // הסתרת השחקן
@@ -150,6 +177,18 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 0f;
     }
 
+    public void PlayerWins()
+    {
+        // Stop the game or show the "You Win" UI
+        Debug.Log("Player Wins!");
+        Time.timeScale = 0f; // Freeze the game
+
+        // You can display a win screen UI if you have one
+        // For example, if you have a win UI element:
+        
+        gameOverUI.SetActive(true); // Or use a dedicated win UI
+        // Optionally, you could show a custom "You Win" message here.
+    }
 
     public void RestartGame()
     {
