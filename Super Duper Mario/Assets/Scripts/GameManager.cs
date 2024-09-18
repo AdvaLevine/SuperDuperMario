@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -12,8 +13,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private GameObject highScoreUI;
     [SerializeField] private GameObject gameOverUI;
-    
-    [SerializeField] private TMPro.TextMeshProUGUI _timer;  // Add reference to the UI Text
+    [SerializeField] private GameObject winScreenUI;  
+
+    [SerializeField] private Text _timer;  // Add reference to the UI Text
     private float elapsedTime = 0f;          // Time since the game started
     public GameObject timerText;
     
@@ -55,6 +57,8 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 1f;
         elapsedTime = 0f;
         timerText.SetActive(true);  // Show "Time" UI when game starts
+        ScoreManager.Instance.ScoreText.SetActive(true);
+        ScoreManager.Instance.ResetScore();
 
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
@@ -93,6 +97,7 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 0f;
         timerText.SetActive(false); // Hide "Time" UI when in the menu
         mainMenuUI.SetActive(true);
+        ScoreManager.Instance.ScoreText.SetActive(false);
     }
 
     public void ExitGame()
@@ -180,14 +185,14 @@ public class GameManager : Singleton<GameManager>
     public void PlayerWins()
     {
         // Stop the game or show the "You Win" UI
-        Debug.Log("Player Wins!");
         Time.timeScale = 0f; // Freeze the game
 
-        // You can display a win screen UI if you have one
-        // For example, if you have a win UI element:
-        
-        gameOverUI.SetActive(true); // Or use a dedicated win UI
-        // Optionally, you could show a custom "You Win" message here.
+        // Show the win screen
+        if (winScreenUI != null)
+        {
+            //todo: ADD animation for flag and mario dissapearing
+            winScreenUI.SetActive(true); // Activate the win screen UI
+        }
     }
 
     public void RestartGame()
@@ -195,6 +200,11 @@ public class GameManager : Singleton<GameManager>
         if (gameOverUI != null)
         {
             gameOverUI.SetActive(false);
+        }
+        
+        if(winScreenUI != null)
+        {
+            winScreenUI.SetActive(false);
         }
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);

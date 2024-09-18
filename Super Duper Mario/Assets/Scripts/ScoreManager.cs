@@ -3,27 +3,35 @@ using UnityEngine.UI;
 
 public class ScoreManager : Singleton<ScoreManager>
 {
-    private int _score = 0;
-    public int Score { get { return _score; } }
+    [SerializeField] private Text _score; // Reference to the child Text component (e.g., "Score")
+    [SerializeField] private GameObject scoreText; // Reference to the parent Text component (e.g., "ScoreText")
+    
+    public GameObject ScoreText => scoreText; // Public property to access the scoreText
 
-    [SerializeField] private Text scoreText;
-
+    private int score;
+    
     private void Start()
     {
         UpdateScoreUI();
     }
 
-    public void AddScore(int amount)
+    public void AddScore(int points)
     {
-        _score += amount;
+        score += points;
+        UpdateScoreUI();
+    }
+
+    public void ResetScore()
+    {
+        score = 0;
         UpdateScoreUI();
     }
 
     private void UpdateScoreUI()
     {
-        if (scoreText != null)
+        if (_score != null)
         {
-            scoreText.text = "Score: " + _score;
+            _score.text = score.ToString();
         }
     }
 }
