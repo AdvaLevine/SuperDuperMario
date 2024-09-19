@@ -4,7 +4,9 @@ using UnityEngine.UI;
 public class MusicManager : MonoBehaviour
 {
     private AudioSource _audioSource;
-
+    public AudioClip jumpClip; // AudioClip for jump sound
+    private AudioSource _jumpSource; // Separate AudioSource for jump sound
+    
     public Slider volumeSlider;  // Slider for volume control
     public Button muteButton; // Button to mute the music
     private bool isMuted = false;
@@ -12,6 +14,9 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
+        _jumpSource = gameObject.AddComponent<AudioSource>(); // Add a new AudioSource for jump sound
+        _jumpSource.clip = jumpClip;
+        
         if (_audioSource != null)
         {
             _audioSource.Play();  // Starts playing the music
@@ -41,7 +46,14 @@ public class MusicManager : MonoBehaviour
             _audioSource.Play();
         }
     }
-    
+    // Play the jump sound
+    public void PlayJumpSound()
+    {
+        if (_jumpSource != null && jumpClip != null)
+        {
+            _jumpSource.PlayOneShot(jumpClip);
+        }
+    }
     public void StopMusic()
     {
         if (_audioSource.isPlaying)

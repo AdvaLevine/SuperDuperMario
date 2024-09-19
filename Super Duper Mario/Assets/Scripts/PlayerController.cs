@@ -26,6 +26,8 @@ public class PlayerController : Singleton<PlayerController>
     private bool jumpInput;//the input for the jump
     private bool isGrounded;//check if the player is on the ground
 
+    public MusicManager musicManager; // Reference to the MusicManager
+
     private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
     private Rigidbody2D _rb;    //the rigidbody of the player
     GameObject _player;     //the player object
@@ -140,7 +142,16 @@ public class PlayerController : Singleton<PlayerController>
             timer = 0f; // Reset timer
         }
         
-        
+        if (Input.GetButtonDown("Jump")) // Assuming "Jump" is set up in your Input settings
+        {
+            // Handle jumping logic here
+
+            // Play the jump sound
+            if (musicManager != null)
+            {
+                musicManager.PlayJumpSound();
+            }
+        }
         
     }
 
