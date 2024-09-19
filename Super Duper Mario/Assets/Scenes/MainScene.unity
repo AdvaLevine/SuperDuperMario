@@ -238,6 +238,7 @@ MonoBehaviour:
     m_Bits: 8
   jumpGravityScale: 0.5
   distanceThreshold: 10
+  pointMultiplier: 10
 --- !u!4 &123102658
 Transform:
   m_ObjectHideFlags: 0
@@ -3647,7 +3648,7 @@ MonoBehaviour:
   winScreenUI: {fileID: 248527756}
   _timer: {fileID: 888796309}
   timerText: {fileID: 573368239}
-  levelTime: 300
+  levelTime: 60
   startX: -4
   endX: 14
   numberOfMonsters: 5

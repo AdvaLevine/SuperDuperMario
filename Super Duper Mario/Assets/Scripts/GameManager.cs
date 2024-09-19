@@ -99,6 +99,14 @@ public class GameManager : Singleton<GameManager>
         int remainingMinutes = Mathf.FloorToInt(remainingTime / 60f);
         int remainingSeconds = Mathf.FloorToInt(remainingTime % 60f);
         _timer.text = string.Format("{0:00}:{1:00}", remainingMinutes, remainingSeconds);
+        
+        // Check if the time is up and handle game over
+        if (remainingTime <= 0)
+        {
+            GameOver();
+            // Ensure timer stays at 00:00
+            _timer.text = "00:00";
+        }
     }
     
     public void ShowMainMenu()
@@ -180,7 +188,9 @@ public class GameManager : Singleton<GameManager>
         // {
         //     ground.SetActive(false);
         // }
-
+        
+        Time.timeScale = 0f;
+        
         // הצגת ממשק הסיום
         if (gameOverUI != null)
         {
@@ -188,7 +198,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         // עצירת הזמן
-        Time.timeScale = 0f;
+      
     }
 
     public void PlayerWins()
