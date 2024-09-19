@@ -13,8 +13,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private GameObject highScoreUI;
     [SerializeField] private GameObject gameOverUI;
-    [SerializeField] private GameObject winScreenUI;  
-
+    [SerializeField] private GameObject winScreenUI; 
+    [SerializeField] private GameObject timeUpUI;
+    
     [SerializeField] private Text _timer;  // Add reference to the UI Text
     private float elapsedTime = 0f;          // Time since the game started
     public GameObject timerText;
@@ -44,15 +45,12 @@ public class GameManager : Singleton<GameManager>
     
     private void Update()
     {
-        if (Time.timeScale > 0f)  // Only update the timer when the game is running
+        if (Time.timeScale > 0f) // Only update the timer when the game is running
         {
             UpdateTimer();
-            if (elapsedTime >= levelTime)
-            {
-                GameOver();
-            }
+            
         }
-        
+
     }
     
     
@@ -103,8 +101,11 @@ public class GameManager : Singleton<GameManager>
         // Check if the time is up and handle game over
         if (remainingTime <= 0)
         {
-            GameOver();
-            // Ensure timer stays at 00:00
+            // Ensure timeUpUI is activated only once
+            if (timeUpUI != null )
+            {
+                timeUpUI.SetActive(true);
+            }
             _timer.text = "00:00";
         }
     }
@@ -219,6 +220,11 @@ public class GameManager : Singleton<GameManager>
         if (gameOverUI != null)
         {
             gameOverUI.SetActive(false);
+        }
+        
+        if(timeUpUI != null)
+        {
+            timeUpUI.SetActive(false);
         }
         
         if(winScreenUI != null)
