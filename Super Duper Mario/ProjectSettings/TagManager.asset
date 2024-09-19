@@ -10,6 +10,7 @@ TagManager:
   - Ground
   - Background
   - Score
+  - QuestionMarkSquare
   layers:
   - Default
   - TransparentFX
