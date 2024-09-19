@@ -237,7 +237,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   jumpGravityScale: 0.5
-  distanceThreshold: 10
   pointMultiplier: 10
 --- !u!4 &123102658
 Transform:
@@ -4325,6 +4324,7 @@ MonoBehaviour:
   _groundPrefab: {fileID: 3617665736069627217, guid: 7b6576b160dd14fbebf70481962d0799, type: 3}
   _BackgroundPrefab: {fileID: 883916079529693664, guid: 203c7152d64897144803c4143b2a2a93, type: 3}
   _monsterPrefab: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
+  coinPrefab: {fileID: 6281090932094986188, guid: ba6e2a5e6a65c124cb5809f732fc2c93, type: 3}
   mainMenuUI: {fileID: 1396664454}
   highScoreUI: {fileID: 1518988326}
   gameOverUI: {fileID: 1647852058}
@@ -4333,9 +4333,6 @@ MonoBehaviour:
   _timer: {fileID: 888796309}
   timerText: {fileID: 573368239}
   levelTime: 60
-  startX: -4
-  endX: 14
-  numberOfMonsters: 5
 --- !u!4 &2116800623
 Transform:
   m_ObjectHideFlags: 0
