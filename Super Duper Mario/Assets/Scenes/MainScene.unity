@@ -2606,13 +2606,23 @@ CanvasRenderer:
   m_GameObject: {fileID: 889475531}
   m_CullTransparentMesh: 1
 --- !u!1 &978746123
-CanvasRenderer:
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 889475531}
-  m_CullTransparentMesh: 1
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 978746124}
+  - component: {fileID: 978746126}
+  - component: {fileID: 978746125}
+  m_Layer: 5
+  m_Name: Text (Legacy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &956085684
 GameObject:
   m_ObjectHideFlags: 0
