@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager>
     private float elapsedTime = 0f;          // Time since the game started
     public GameObject timerText;
     
-    [SerializeField] private float levelTime = 60f;  // 300 seconds for the level
+    [SerializeField] private float levelTime = 60f;  // 60 seconds for the level
     [SerializeField] private float startX = -4f; // נקודת ההתחלה של השלב
     [SerializeField] private float endX = 19f;   // נקודת הסיום של השלב
     [SerializeField] private int numberOfMonsters = 10; // מספר המפלצות שתרצה ליצור
@@ -47,7 +47,12 @@ public class GameManager : Singleton<GameManager>
         if (Time.timeScale > 0f)  // Only update the timer when the game is running
         {
             UpdateTimer();
+            if (elapsedTime >= levelTime)
+            {
+                GameOver();
+            }
         }
+        
     }
     
     
@@ -83,13 +88,17 @@ public class GameManager : Singleton<GameManager>
     {
         // Increment the elapsed time
         elapsedTime += Time.deltaTime;
-
-        // Convert the time to minutes and seconds
-        int minutes = Mathf.FloorToInt(elapsedTime / 60f);
-        int seconds = Mathf.FloorToInt(elapsedTime % 60f);
-
-        // Update the text field with the formatted time
-        _timer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        
+        // Convert the time to minutes and seconds up
+        //int minutes = Mathf.FloorToInt(elapsedTime / 60f);
+        //int seconds = Mathf.FloorToInt(elapsedTime % 60f);
+        //_timer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        
+        // time remaining instead of time elapsed
+        int remainingTime = Mathf.FloorToInt(levelTime - elapsedTime);
+        int remainingMinutes = Mathf.FloorToInt(remainingTime / 60f);
+        int remainingSeconds = Mathf.FloorToInt(remainingTime % 60f);
+        _timer.text = string.Format("{0:00}:{1:00}", remainingMinutes, remainingSeconds);
     }
     
     public void ShowMainMenu()

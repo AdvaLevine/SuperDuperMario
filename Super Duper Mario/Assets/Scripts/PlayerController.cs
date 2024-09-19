@@ -30,7 +30,7 @@ public class PlayerController : Singleton<PlayerController>
     GameObject _player;     //the player object
     
     private float jumpForceMultiplier = 1f;
-    private float coinMultiplier = 1f;
+    private float coinMultiplier = 5f;
 
     private Coroutine jumpForceCoroutine;
     private Coroutine coinMultiplierCoroutine;
@@ -112,8 +112,6 @@ public class PlayerController : Singleton<PlayerController>
         {
             // Accumulate the forward distance traveled
             distanceTraveled += distanceX;
-            Debug.Log($"Distance traveled: {distanceTraveled}");
-
             // Update last position
             lastPosition = _player.transform.position;
         }
@@ -148,7 +146,6 @@ public class PlayerController : Singleton<PlayerController>
         // Calculate the score based on the distance traveled
         int points = (int)(distanceTraveled * pointMultiplier);
         // Add the score to the score manager
-        Debug.Log($"Adding score: {points}");
         ScoreManager.Instance.AddScore(points);
         distanceTraveled = 0f; // Reset distance traveled
 
