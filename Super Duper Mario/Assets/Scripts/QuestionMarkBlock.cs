@@ -64,7 +64,7 @@ public class QuestionMarkBlock : MonoBehaviour
                 player.SetJumpForceMultiplier(1.5f);
                 break;
             case BlockEffect.LowerJump:
-                player.SetJumpForceMultiplier(0.75f);
+                player.SetJumpForceMultiplier(0.5f);
                 break;
             case BlockEffect.AddPoints:
                 ScoreManager.Instance.AddScore(50);
@@ -88,10 +88,8 @@ public class QuestionMarkBlock : MonoBehaviour
     
     IEnumerator JumpUpAndDown()
     {
-        // הזז את הבלוק למעלה
         Vector3 targetPosition = new Vector3(transform.position.x, transform.position.y + jumpHeight, transform.position.z);
         
-        // תזוזה למעלה
         float elapsedTime = 0;
         while (elapsedTime < jumpDuration)
         {
@@ -100,10 +98,8 @@ public class QuestionMarkBlock : MonoBehaviour
             yield return null;
         }
 
-        // וודא שהגענו למיקום העליון
         transform.position = targetPosition;
 
-        // תזוזה חזרה למיקום המקורי
         elapsedTime = 0;
         while (elapsedTime < jumpDuration)
         {
@@ -112,7 +108,6 @@ public class QuestionMarkBlock : MonoBehaviour
             yield return null;
         }
 
-        // החזר למיקום המקורי
         transform.position = originalPosition;
     }
     

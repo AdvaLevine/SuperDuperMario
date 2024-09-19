@@ -10,7 +10,7 @@ public class Coin : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerController player = collision.GetComponent<PlayerController>();
+            PlayerController player = FindObjectOfType<PlayerController>();
             int totalCoinValue = Mathf.RoundToInt(coinValue * player.GetCoinMultiplier());
             ScoreManager.Instance.AddScore(totalCoinValue);
             Debug.Log("Coin collected. Value: " + totalCoinValue);

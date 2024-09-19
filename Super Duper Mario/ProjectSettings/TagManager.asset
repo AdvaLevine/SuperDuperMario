@@ -11,6 +11,7 @@ TagManager:
   - Background
   - Score
   - QuestionMarkSquare
+  - Coin
   layers:
   - Default
   - TransparentFX

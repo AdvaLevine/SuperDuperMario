@@ -23,6 +23,7 @@ public class PlayerController : Singleton<PlayerController>
     // Animation settings
     private bool facingRight = true;//check if the player is facing right
     private float moveInput;//the input for the movement
+    private bool jumpInput;//the input for the jump
     private bool isGrounded;//check if the player is on the ground
 
     private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
@@ -34,6 +35,9 @@ public class PlayerController : Singleton<PlayerController>
 
     private Coroutine jumpForceCoroutine;
     private Coroutine coinMultiplierCoroutine;
+    
+    private Animator _animator;
+   
 
     public void SetJumpForceMultiplier(float multiplier, float duration = 5f)
     {
@@ -74,6 +78,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Jump()
     {
+        HandleJumpAnimations();
         _rb.gravityScale = jumpGravityScale;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
     }
@@ -94,6 +99,7 @@ public class PlayerController : Singleton<PlayerController>
     // Start is called before the first frame update
     void Start()
     {
+        _animator = _player.GetComponent<Animator>();
         lastPosition = _player.transform.position; //for the scores calculation
     }
 
@@ -104,6 +110,16 @@ public class PlayerController : Singleton<PlayerController>
         
         // Check if the player is grounded
         isGrounded = IsGrounded();
+        
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            jumpInput = true;
+        }
+        
+        if(_animator.GetBool("IsJumping") && isGrounded)
+        {
+            _animator.SetBool("IsJumping", false);
+        }
         
         // Calculate forward distance traveled since the last frame
         float distanceX = _player.transform.position.x - lastPosition.x;
@@ -123,22 +139,33 @@ public class PlayerController : Singleton<PlayerController>
             CalculateAndAddScore();
             timer = 0f; // Reset timer
         }
-
-        // Jump if grounded and the jump button is pressed
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            Jump();
-        }
-        if (_rb.velocity.y <= 0) // When falling down
-        {
-            _rb.gravityScale = 1; // Reset gravity scale
-        }
-        //HandleAnimations();
+        
+        
+        
     }
 
-    private void HandleAnimations()
+    private void HandleWalkingAnimations()
     {
-        throw new System.NotImplementedException();
+        moveInput = Input.GetAxisRaw("Horizontal");
+
+        if (moveInput != 0)
+        {
+            _animator.SetBool("IsWalking", true); 
+        }
+        else
+        {
+            _animator.SetBool("IsWalking", false);
+        }
+    }
+    
+    private void HandleJumpAnimations()
+    {
+        if (_animator.GetBool("IsWalking"))
+        {
+            _animator.SetBool("IsJumping", false);
+        }
+        
+        _animator.SetBool("IsJumping", true);
     }
     
     private void CalculateAndAddScore()
@@ -150,23 +177,31 @@ public class PlayerController : Singleton<PlayerController>
         distanceTraveled = 0f; // Reset distance traveled
 
     }
-    
-    // private void Jump()
-    // {
-    //     _rb.gravityScale = jumpGravityScale;
-    //     _rb.velocity = new Vector2(_rb.velocity.x, jumpForce);
-    // }
+
     
     private void FixedUpdate()
     {
         Move();
+        
+        // Jump if grounded and the jump button is pressed
+        if (jumpInput)
+        {
+            Jump();
+            jumpInput = false;
+        }
+        if (_rb.velocity.y <= 0) // When falling down
+        {
+            _rb.gravityScale = 1; // Reset gravity scale
+        }
     }
     
     private void Move()
     {
         // Set horizontal velocity
         _rb.velocity = new Vector2(moveInput * moveSpeed, _rb.velocity.y);
-
+        
+        HandleWalkingAnimations();
+       
         // Flip the sprite based on movement direction
         if (moveInput > 0 && !facingRight)
             Flip();
@@ -184,7 +219,7 @@ public class PlayerController : Singleton<PlayerController>
     
     private bool IsGrounded()
     {
-        float rayLength = 0.5f;
+        float rayLength = 0.2f;
     
         RaycastHit2D hit = Physics2D.Raycast(_player.transform.position, Vector2.down, rayLength, groundLayer);
 

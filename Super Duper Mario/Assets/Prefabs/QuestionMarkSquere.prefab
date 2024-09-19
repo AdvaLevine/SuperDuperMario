@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6095a6ded262a4ce7b3030308068bda9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpHeight: 0.2
+  jumpDuration: 0.1
   blockEffect: 0
 --- !u!61 &-8688819483121935688
 BoxCollider2D:
@@ -155,7 +157,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -474865331, guid: 2276a13a779944c5bb3ad4c1ada0f3d0, type: 3}
+  m_Sprite: {fileID: -895228292, guid: 2276a13a779944c5bb3ad4c1ada0f3d0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
