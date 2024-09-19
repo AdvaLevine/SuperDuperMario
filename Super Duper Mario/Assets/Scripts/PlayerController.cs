@@ -13,7 +13,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
     // Score settings
-    [SerializeField] private float distanceThreshold = 0.5f; // Distance to accumulate points
+    [Header("Score Settings")]
     [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
     private Vector3 lastPosition;
     private float distanceTraveled = 0f;
