@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -112,6 +113,8 @@ public class GameManager : Singleton<GameManager>
         timerText.SetActive(false); 
         mainMenuUI.SetActive(true);
         ScoreManager.Instance.ScoreText.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(easyButton.gameObject);
+
     }
 
     public void ExitGame()
