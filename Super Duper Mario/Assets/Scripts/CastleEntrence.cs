@@ -10,6 +10,7 @@ public class CastleEntrance : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.PlayerWins();
+            PlayerController.Instance.Die(); // So wont be able to move after winning
         }
     }
 }
