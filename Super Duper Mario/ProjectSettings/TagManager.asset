@@ -12,7 +12,6 @@ TagManager:
   - Score
   - QuestionMarkSquare
   - Coin
-  - MonsterHard
   layers:
   - Default
   - TransparentFX
