@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -24,16 +25,8 @@ public class GameManager : Singleton<GameManager>
     public GameObject timerText;
     [SerializeField] private float levelTime = 120f; 
     
-    // [Header("Coin Settings")]
-    // [SerializeField] private int numberOfCoins = 15; // Number of coins to spawn
-    // [SerializeField] private float xMin = -10f; // Min X position for spawning coins
-    // [SerializeField] private float xMax = 16f; // Max X position for spawning coins
-    // [SerializeField] private float yMin = 1f; // Min Y position for spawning coins
-    // [SerializeField] private float yMax = 2.5f; // Max Y position for spawning coins
-    //
-    // [SerializeField] private float startX = -4f; // נקודת ההתחלה של השלב
-    // [SerializeField] private float endX = 19f; // נקודת הסיום של השלב
-    // [SerializeField] private int numberOfMonsters = 10; // מספר המפלצות שתרצה ליצור
+    [SerializeField] private Button easyButton; 
+   
 
     private bool playerHasWon = false;
 
@@ -65,7 +58,6 @@ public class GameManager : Singleton<GameManager>
             UpdateTimer();
 
         }
-
     }
     
     public void StartGame()
@@ -94,6 +86,8 @@ public class GameManager : Singleton<GameManager>
         _playerController.SetCameraFollow(_cameraFollow);
 
     }
+    
+    
 
     private void UpdateTimer()
     {
@@ -122,11 +116,19 @@ public class GameManager : Singleton<GameManager>
         timerText.SetActive(false); 
         mainMenuUI.SetActive(true);
         ScoreManager.Instance.ScoreText.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(easyButton.gameObject);
     }
 
     public void ExitGame()
     {
+        // Check if we are running in the Unity Editor
+        #if UNITY_EDITOR
+        // Stop play mode in the editor
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        // Quit the application in the build
         Application.Quit();
+        #endif
     }
 
     public void SetDifficulty(int difficulty)
