@@ -23,18 +23,8 @@ public class GameManager : Singleton<GameManager>
     private float elapsedTime = 0f;
     public GameObject timerText;
     [SerializeField] private float levelTime = 120f; 
+    [SerializeField] private Button easyButton; // כפתור ה-Easy
     
-    // [Header("Coin Settings")]
-    // [SerializeField] private int numberOfCoins = 15; // Number of coins to spawn
-    // [SerializeField] private float xMin = -10f; // Min X position for spawning coins
-    // [SerializeField] private float xMax = 16f; // Max X position for spawning coins
-    // [SerializeField] private float yMin = 1f; // Min Y position for spawning coins
-    // [SerializeField] private float yMax = 2.5f; // Max Y position for spawning coins
-    //
-    // [SerializeField] private float startX = -4f; // נקודת ההתחלה של השלב
-    // [SerializeField] private float endX = 19f; // נקודת הסיום של השלב
-    // [SerializeField] private int numberOfMonsters = 10; // מספר המפלצות שתרצה ליצור
-
     private bool playerHasWon = false;
 
     public enum Difficulty
