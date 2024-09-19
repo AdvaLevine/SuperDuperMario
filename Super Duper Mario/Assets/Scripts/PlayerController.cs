@@ -12,7 +12,15 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private LayerMask groundLayer;//the layer the player can jump from
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
+    // Score settings
+    [SerializeField] private float distanceThreshold = 0.5f; // Distance to accumulate points
+    [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
+    private Vector3 lastPosition;
+    private float distanceTraveled = 0f;
+    private float timer = 0f;
+    private float scoreUpdateInterval = 1f; // Update score every 1 seconds
 
+    // Animation settings
     private bool facingRight = true;//check if the player is facing right
     private float moveInput;//the input for the movement
     private bool isGrounded;//check if the player is on the ground
@@ -22,7 +30,7 @@ public class PlayerController : Singleton<PlayerController>
     GameObject _player;     //the player object
     
     private float jumpForceMultiplier = 1f;
-    private float coinMultiplier = 1f;
+    private float coinMultiplier = 5f;
 
     private Coroutine jumpForceCoroutine;
     private Coroutine coinMultiplierCoroutine;
@@ -86,6 +94,7 @@ public class PlayerController : Singleton<PlayerController>
     // Start is called before the first frame update
     void Start()
     {
+        lastPosition = _player.transform.position; //for the scores calculation
     }
 
     // Update is called once per frame
@@ -95,6 +104,25 @@ public class PlayerController : Singleton<PlayerController>
         
         // Check if the player is grounded
         isGrounded = IsGrounded();
+        
+        // Calculate forward distance traveled since the last frame
+        float distanceX = _player.transform.position.x - lastPosition.x;
+    
+        if (distanceX > 0) // Only accumulate forward movement (positive x direction)
+        {
+            // Accumulate the forward distance traveled
+            distanceTraveled += distanceX;
+            // Update last position
+            lastPosition = _player.transform.position;
+        }
+
+        // Timer to update score every interval
+        timer += Time.deltaTime;
+        if (timer >= scoreUpdateInterval)
+        {
+            CalculateAndAddScore();
+            timer = 0f; // Reset timer
+        }
 
         // Jump if grounded and the jump button is pressed
         if (isGrounded && Input.GetButtonDown("Jump"))
@@ -112,7 +140,17 @@ public class PlayerController : Singleton<PlayerController>
     {
         throw new System.NotImplementedException();
     }
+    
+    private void CalculateAndAddScore()
+    {
+        // Calculate the score based on the distance traveled
+        int points = (int)(distanceTraveled * pointMultiplier);
+        // Add the score to the score manager
+        ScoreManager.Instance.AddScore(points);
+        distanceTraveled = 0f; // Reset distance traveled
 
+    }
+    
     // private void Jump()
     // {
     //     _rb.gravityScale = jumpGravityScale;

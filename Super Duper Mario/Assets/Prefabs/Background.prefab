@@ -8880,6 +8880,7 @@ GameObject:
   - component: {fileID: 8205312777846495623}
   - component: {fileID: 5291331774192596295}
   - component: {fileID: 3555108684138451893}
+  - component: {fileID: 7890137411873814727}
   m_Layer: 0
   m_Name: mario castle
   m_TagString: Obstacle
@@ -8999,6 +9000,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.3356027, y: 1.1223335}
   m_EdgeRadius: 0
+--- !u!114 &7890137411873814727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7236131998983382136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6283ca395940338798a669c9eee87b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7278130808144065347
 GameObject:
   m_ObjectHideFlags: 0

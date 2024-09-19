@@ -9,6 +9,7 @@ TagManager:
   - Monster
   - Ground
   - Background
+  - Score
   layers:
   - Default
   - TransparentFX
