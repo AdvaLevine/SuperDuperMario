@@ -1,14 +1,17 @@
+using System.Collections;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2f;
     private Rigidbody2D _rb;
+    private Animator _animator;
     private bool movingRight = true;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -27,7 +30,7 @@ public class Monster : MonoBehaviour
             _rb.velocity = new Vector2(-moveSpeed, _rb.velocity.y);
         }
     }
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Monster"))
@@ -41,9 +44,9 @@ public class Monster : MonoBehaviour
 
             if (collision.contacts[0].normal.y < -0.5f)
             {
+                player.Bounce();
                 Die();
                 ScoreManager.Instance.AddScore(50);
-                player.Bounce();
             }
             else
             {
@@ -52,9 +55,19 @@ public class Monster : MonoBehaviour
         }
     }
 
+  
     private void Die()
     {
-        // אפשר להוסיף אנימציית מוות
+        _animator.SetTrigger("Die");
+        StartCoroutine(DieAfterAnimation()); 
+    }
+
+    private IEnumerator DieAfterAnimation()
+    {
+        // חכה למשך זמן האנימציה
+        yield return new WaitForSeconds(0.25f);
+
+        // השמדת האובייקט לאחר סיום האנימציה
         Destroy(gameObject);
     }
 
