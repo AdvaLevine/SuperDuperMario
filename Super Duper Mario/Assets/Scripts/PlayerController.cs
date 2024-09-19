@@ -14,11 +14,11 @@ public class PlayerController : Singleton<PlayerController>
 
     // Score settings
     [SerializeField] private float distanceThreshold = 0.5f; // Distance to accumulate points
-    [SerializeField] private int pointMultiplier = 10; // Points per distance traveled
+    [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
     private Vector3 lastPosition;
     private float distanceTraveled = 0f;
     private float timer = 0f;
-    private float scoreUpdateInterval = 5f; // Update score every 10 seconds
+    private float scoreUpdateInterval = 1f; // Update score every 1 seconds
 
     // Animation settings
     private bool facingRight = true;//check if the player is facing right
@@ -105,13 +105,14 @@ public class PlayerController : Singleton<PlayerController>
         // Check if the player is grounded
         isGrounded = IsGrounded();
         
-        // Calculate distance traveled since last frame for the scores
-        float distance = Vector3.Distance(_player.transform.position, lastPosition);
-        
-        if (distance > 0)
+        // Calculate forward distance traveled since the last frame
+        float distanceX = _player.transform.position.x - lastPosition.x;
+    
+        if (distanceX > 0) // Only accumulate forward movement (positive x direction)
         {
-            // Accumulate the distance traveled
-            distanceTraveled += distance;
+            // Accumulate the forward distance traveled
+            distanceTraveled += distanceX;
+            Debug.Log($"Distance traveled: {distanceTraveled}");
 
             // Update last position
             lastPosition = _player.transform.position;
@@ -144,14 +145,13 @@ public class PlayerController : Singleton<PlayerController>
     
     private void CalculateAndAddScore()
     {
-        if (distanceTraveled >= distanceThreshold)
-        {
-            // You can adjust this to increase points based on distance traveled
-            int pointsToAdd = Mathf.FloorToInt(distanceTraveled / distanceThreshold) * pointMultiplier;
-            Debug.Log($"Score added: {pointsToAdd}");
-            ScoreManager.Instance.AddScore(pointsToAdd);
-            distanceTraveled = 0f; // Reset distance traveled after adding score
-        }
+        // Calculate the score based on the distance traveled
+        int points = (int)(distanceTraveled * pointMultiplier);
+        // Add the score to the score manager
+        Debug.Log($"Adding score: {points}");
+        ScoreManager.Instance.AddScore(points);
+        distanceTraveled = 0f; // Reset distance traveled
+
     }
     
     // private void Jump()
