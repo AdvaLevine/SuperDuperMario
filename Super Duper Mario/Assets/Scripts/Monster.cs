@@ -10,6 +10,11 @@ public class Monster : MonoBehaviour
 
     private void Start()
     {
+        if(GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.Easy && gameObject.CompareTag("MonsterHard"))
+        {
+            Destroy(gameObject);
+        }
+        
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
     }
@@ -33,7 +38,7 @@ public class Monster : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Monster"))
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("MonsterHard"))
         {
             movingRight = !movingRight;
             Flip();
@@ -65,7 +70,7 @@ public class Monster : MonoBehaviour
     private IEnumerator DieAfterAnimation()
     {
         // חכה למשך זמן האנימציה
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.15f);
 
         // השמדת האובייקט לאחר סיום האנימציה
         Destroy(gameObject);
