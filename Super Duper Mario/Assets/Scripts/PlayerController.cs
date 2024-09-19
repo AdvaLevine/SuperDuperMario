@@ -244,6 +244,7 @@ public class PlayerController : Singleton<PlayerController>
 
     public void Die()
     {
+        if (GameManager.Instance.HasPlayerWon()) return; // Prevent dying if the player has won
         // נטרול השליטה בשחקן
         enabled = false;
         // אפשר להוסיף אנימציית מוות

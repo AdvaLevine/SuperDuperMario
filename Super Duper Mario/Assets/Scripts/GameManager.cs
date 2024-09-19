@@ -22,7 +22,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private Text _timer; 
     private float elapsedTime = 0f;
     public GameObject timerText;
-    [SerializeField] private float levelTime = 60f; 
+    [SerializeField] private float levelTime = 120f; 
     
     // [Header("Coin Settings")]
     // [SerializeField] private int numberOfCoins = 15; // Number of coins to spawn
@@ -34,6 +34,8 @@ public class GameManager : Singleton<GameManager>
     // [SerializeField] private float startX = -4f; // נקודת ההתחלה של השלב
     // [SerializeField] private float endX = 19f; // נקודת הסיום של השלב
     // [SerializeField] private int numberOfMonsters = 10; // מספר המפלצות שתרצה ליצור
+
+    private bool playerHasWon = false;
 
     public enum Difficulty
     {
@@ -47,7 +49,10 @@ public class GameManager : Singleton<GameManager>
     private PlayerController _playerController;
 
 
-
+    public bool HasPlayerWon()
+    {
+        return playerHasWon;
+    }
     private void Awake()
     {
         ShowMainMenu();
@@ -104,6 +109,7 @@ public class GameManager : Singleton<GameManager>
             if (timeUpUI != null)
             {
                 timeUpUI.SetActive(true);
+                PlayerController.Instance.Die(); // So wont be able to move after time is up
             }
 
             _timer.text = "00:00";
@@ -151,6 +157,7 @@ public class GameManager : Singleton<GameManager>
     public void PlayerWins()
     {
         Time.timeScale = 0f; 
+        playerHasWon = true; // Set the flag to true to track win state
 
         if (winScreenUI != null)
         {
