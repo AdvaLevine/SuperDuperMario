@@ -119,7 +119,14 @@ public class GameManager : Singleton<GameManager>
 
     public void ExitGame()
     {
+        // Check if we are running in the Unity Editor
+    #if UNITY_EDITOR
+        // Stop play mode in the editor
+        UnityEditor.EditorApplication.isPlaying = false;
+    #else
+        // Quit the application in the build
         Application.Quit();
+    #endif
     }
 
     public void SetDifficulty(int difficulty)
