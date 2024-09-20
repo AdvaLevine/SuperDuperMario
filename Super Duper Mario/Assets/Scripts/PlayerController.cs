@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
 {
-    [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private GameObject[] _playerPrefab;
+    public int CharacterSelectionIndex { get; set; } = 0;
     
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;//the speed of the player
@@ -12,6 +13,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private LayerMask groundLayer;//the layer the player can jump from
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
+    
     // Score settings
     [Header("Score Settings")]
     [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
@@ -88,7 +90,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Awake()
     {
-        _player = Instantiate(_playerPrefab, _initialPosition , Quaternion.identity);
+        _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition , Quaternion.identity);
 
         _rb = _player.GetComponent<Rigidbody2D>();
         if (_rb == null)
@@ -96,6 +98,42 @@ public class PlayerController : Singleton<PlayerController>
             _rb = _player.AddComponent<Rigidbody2D>();
         }
     }
+    
+    public void OnMarioImageClick()
+    {
+        SwitchCharacter();
+        CharacterSelectionIndex = 0;
+        Debug.Log("Mario selected");
+    }
+    
+    public void OnShrekImageClick()
+    {
+        SwitchCharacter();
+        CharacterSelectionIndex = 1;
+        Debug.Log("Shrek selected");
+    }
+    
+    public void SwitchCharacter()
+    {
+        if (_player != null)
+        {
+            Destroy(_player); // מחק את השחקן הנוכחי
+        }
+    
+        // צור את השחקן מחדש עם ה-prefab הנבחר
+        _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition, Quaternion.identity);
+        _rb = _player.GetComponent<Rigidbody2D>();
+
+        if (_rb == null)
+        {
+            _rb = _player.AddComponent<Rigidbody2D>();
+        }
+
+        // עדכון האנימטור של השחקן החדש
+        _animator = _player.GetComponent<Animator>();
+        
+    }
+
 
 
     // Start is called before the first frame update
