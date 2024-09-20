@@ -26,7 +26,10 @@ public class PlayerController : Singleton<PlayerController>
     private bool jumpInput;//the input for the jump
     private bool isGrounded;//check if the player is on the ground
 
-    public MusicManager musicManager; // Reference to the MusicManager
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip jumpSound; // The jump sound
+    private AudioSource audioSource;
+
 
     private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
     private Rigidbody2D _rb;    //the rigidbody of the player
@@ -83,8 +86,17 @@ public class PlayerController : Singleton<PlayerController>
         HandleJumpAnimations();
         _rb.gravityScale = jumpGravityScale;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
-    }
+        // Play the jump sound
+        PlayJumpSound();
 
+    }
+    void PlayJumpSound()
+    {
+        if (jumpSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(jumpSound); // Play the jump sound
+        }
+    }
 
     private void Awake()
     {
@@ -102,6 +114,8 @@ public class PlayerController : Singleton<PlayerController>
     void Start()
     {
         _animator = _player.GetComponent<Animator>();
+        audioSource = gameObject.AddComponent<AudioSource>(); // Adding an AudioSource component
+        audioSource.volume = 0.3f;
         lastPosition = _player.transform.position; //for the scores calculation
     }
 
@@ -141,18 +155,6 @@ public class PlayerController : Singleton<PlayerController>
             CalculateAndAddScore();
             timer = 0f; // Reset timer
         }
-        
-        if (Input.GetButtonDown("Jump")) // Assuming "Jump" is set up in your Input settings
-        {
-            // Handle jumping logic here
-
-            // Play the jump sound
-            if (musicManager != null)
-            {
-                musicManager.PlayJumpSound();
-            }
-        }
-        
     }
 
     private void HandleWalkingAnimations()
