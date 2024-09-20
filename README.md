@@ -12,7 +12,7 @@ The game will initially support a single-player version.
 After selecting the game mode single
 
 ## THERES AN EASTER EGG!
-If you press shrek carachter your player is changing to the shrek character, else if you press mario or dont do a thing- you've got mario!
+If you press shrek character your player is changing to the shrek character, else if you press mario or dont do a thing- you've got mario!
 
 # Game loop
 Once the game starts, the menu will disappear. During the game, the player will jump using the up arrow, causing the character to jump in place. There will be obstacles along the way that either cause the player to lose or delay their progress. The player's goal is to reach the castle as quickly as possible to save the princess, and to also collect the highest score by gathering coins.
