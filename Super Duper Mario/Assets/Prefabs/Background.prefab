@@ -12543,7 +12543,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8688819483121935688, guid: 1c9bee6d733134ba2a4a3f5f5d5f2b86, type: 3}
       propertyPath: m_Size.y
-      value: 0.19185692
+      value: 0.1915
       objectReference: {fileID: 0}
     - target: {fileID: -8688819483121935688, guid: 1c9bee6d733134ba2a4a3f5f5d5f2b86, type: 3}
       propertyPath: m_Offset.y
