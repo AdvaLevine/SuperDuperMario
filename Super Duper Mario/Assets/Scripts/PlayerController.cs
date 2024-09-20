@@ -12,6 +12,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private LayerMask groundLayer;//the layer the player can jump from
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
+    
     // Score settings
     [Header("Score Settings")]
     [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
