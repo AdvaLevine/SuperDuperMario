@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class MusicManager : MonoBehaviour
 {
     private AudioSource _audioSource;
-    
     public Slider volumeSlider;  // Slider for volume control
     public Button muteButton; // Button to mute the music
     private bool isMuted = false;
@@ -42,7 +41,7 @@ public class MusicManager : MonoBehaviour
             _audioSource.Play();
         }
     }
-  
+    
     public void StopMusic()
     {
         if (_audioSource.isPlaying)

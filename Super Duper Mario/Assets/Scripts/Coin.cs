@@ -5,6 +5,7 @@ public class Coin : MonoBehaviour
 {
     [SerializeField] private int coinValue = 1;
     [SerializeField] private AudioClip coinCollectSound; // Coin collection sound
+    private static bool isCoinMuted = false; // Static mute state for all coins
 
     private AudioSource audioSource; // AudioSource for playing sound
     
@@ -22,12 +23,14 @@ public class Coin : MonoBehaviour
             PlayerController player = FindObjectOfType<PlayerController>();
             int totalCoinValue = Mathf.RoundToInt(coinValue * player.GetCoinMultiplier());
             ScoreManager.Instance.AddScore(totalCoinValue);
-            // Play the coin sound
-            PlayCoinSound();
+            // Play the coin sound only if it's not muted
+            if (coinCollectSound != null && !isCoinMuted)
+            {
+                PlayCoinSound();
+            }
 
             // Destroy the coin immediately
             Destroy(gameObject);
-            
         }
     }
     
@@ -42,5 +45,10 @@ public class Coin : MonoBehaviour
 
         // Destroy the sound object after the sound has played
         Destroy(soundObject, coinCollectSound.length);
+    }
+    
+    public void ToggleCoinMute()
+    {
+        isCoinMuted = !isCoinMuted;
     }
 }
