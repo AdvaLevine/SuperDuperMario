@@ -23,10 +23,12 @@ Currently, we plan to implement one or two levels, depending on progress.
 
 Difficulty Levels:
 We will create two difficulty levels: Easy and Hard.
+
 In Easy Mode:
 
 There will be fewer enemies.
 Question Mark Blocks that give good rewards will be green, while those that give bad rewards will be red.
+
 In Hard Mode:
 
 There will be more enemies.
