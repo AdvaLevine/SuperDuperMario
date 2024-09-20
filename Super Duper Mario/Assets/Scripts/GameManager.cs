@@ -57,6 +57,7 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         ShowMainMenu();
+        DontDestroyOnLoad(highScoreUI);
     }
 
     private void Update()
@@ -173,6 +174,7 @@ public class GameManager : Singleton<GameManager>
     {
         StopMusic();
         PlayLoseSound();
+        ScoreManager.Instance.SaveHighScores();
 
         Time.timeScale = 0f;
 
@@ -260,6 +262,7 @@ public class GameManager : Singleton<GameManager>
         {
             winScreenUI.SetActive(false);
         }
+        
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
