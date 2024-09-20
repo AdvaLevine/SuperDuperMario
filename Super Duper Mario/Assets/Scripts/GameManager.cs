@@ -24,9 +24,15 @@ public class GameManager : Singleton<GameManager>
     private float elapsedTime = 0f;
     public GameObject timerText;
     [SerializeField] private float levelTime = 120f; 
+    
     [SerializeField] private Button easyButton; // כפתור ה-Easy
     
     private bool playerHasWon = false;
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip winSound; // The win sound clip
+    [SerializeField] private AudioClip loseSound; // The lose sound clip
+    private AudioSource audioSource;
+    private MusicManager musicManager;
 
     public enum Difficulty
     {
@@ -83,7 +89,13 @@ public class GameManager : Singleton<GameManager>
 
         _playerController = PlayerController.Instance;
         _playerController.SetCameraFollow(_cameraFollow);
-
+        
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        musicManager = FindObjectOfType<MusicManager>();
     }
 
     private void UpdateTimer()
@@ -99,6 +111,8 @@ public class GameManager : Singleton<GameManager>
         {
             if (timeUpUI != null)
             {
+                StopMusic();
+                PlayLoseSound();
                 timeUpUI.SetActive(true);
                 PlayerController.Instance.Die(); // So wont be able to move after time is up
             }
@@ -147,7 +161,9 @@ public class GameManager : Singleton<GameManager>
     public void GameOver()
     {
         Time.timeScale = 0f;
-        
+        StopMusic();
+        PlayLoseSound();
+
         if (gameOverUI != null)
         {
             gameOverUI.SetActive(true);
@@ -158,12 +174,39 @@ public class GameManager : Singleton<GameManager>
     {
         Time.timeScale = 0f; 
         playerHasWon = true; // Set the flag to true to track win state
+        StopMusic();
+        PlayWinSound();
 
         if (winScreenUI != null)
         {
             //todo: ADD animation for flag and mario dissapearing
             winScreenUI.SetActive(true); // Activate the win screen UI
         }
+    }
+
+    private void StopMusic()
+    {
+        if (musicManager != null)
+        {
+            musicManager.StopMusic(); // Call the stop music method in MusicManager
+        }
+    }
+    private void PlayWinSound()
+    {
+        if (winSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(winSound); // Play the win sound
+        }
+
+    }
+
+    private void PlayLoseSound()
+    {
+        if (loseSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(loseSound); // Play the lose sound
+        }
+        
     }
 
     public void RestartGame()
