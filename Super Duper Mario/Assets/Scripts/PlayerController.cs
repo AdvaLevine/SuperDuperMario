@@ -1,6 +1,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : Singleton<PlayerController>
 {
@@ -94,6 +95,9 @@ public class PlayerController : Singleton<PlayerController>
     public void ToggleJumpMute()
     {
         isJumpMuted = !isJumpMuted;
+        
+        // Deselect the button to prevent keyboard input
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     void PlayJumpSound()
@@ -149,9 +153,7 @@ public class PlayerController : Singleton<PlayerController>
         _animator = _player.GetComponent<Animator>();
         
     }
-
-
-
+    
     // Start is called before the first frame update
     void Start()
     {
