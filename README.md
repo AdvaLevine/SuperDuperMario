@@ -42,10 +42,10 @@ If you press shrek character your player is changing to the shrek character, els
 
 
 # Implementation Details:
- # Scenes:
+### Scenes:
 The entire game will take place within one scene.
 
-# Packages:
+### Packages:
 The game will utilize Unity's 2D physics (with a 2D Rigidbody on the player).
 The game's menus will use Unity's Canvas system.
 
