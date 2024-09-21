@@ -1,6 +1,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : Singleton<PlayerController>
 {
@@ -31,7 +32,7 @@ public class PlayerController : Singleton<PlayerController>
     [Header("Audio Settings")]
     [SerializeField] private AudioClip jumpSound; // The jump sound
     private AudioSource audioSource;
-
+    private bool isJumpMuted = false; // Mute state for jump sound
 
     private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
     private Rigidbody2D _rb;    //the rigidbody of the player
@@ -85,18 +86,25 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Jump()
     {
+        PlayJumpSound();
         HandleJumpAnimations();
         _rb.gravityScale = jumpGravityScale;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
-        // Play the jump sound
-        PlayJumpSound();
 
     }
+    public void ToggleJumpMute()
+    {
+        isJumpMuted = !isJumpMuted;
+        
+        // Deselect the button to prevent keyboard input
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+
     void PlayJumpSound()
     {
-        if (jumpSound != null && audioSource != null)
+        if (jumpSound != null && !isJumpMuted) // Check mute state
         {
-            audioSource.PlayOneShot(jumpSound); // Play the jump sound
+            audioSource.PlayOneShot(jumpSound);
         }
     }
 
@@ -145,9 +153,7 @@ public class PlayerController : Singleton<PlayerController>
         _animator = _player.GetComponent<Animator>();
         
     }
-
-
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -307,4 +313,5 @@ public class PlayerController : Singleton<PlayerController>
     {
         _player.SetActive(b);
     }
+    
 }

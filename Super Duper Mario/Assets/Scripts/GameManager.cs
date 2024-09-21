@@ -24,10 +24,14 @@ public class GameManager : Singleton<GameManager>
     private float elapsedTime = 0f;
     public GameObject timerText;
     [SerializeField] private float levelTime = 120f; 
-    
+    [Header("Difficulty Settings")]
     [SerializeField] private Button easyButton; // כפתור ה-Easy
     
     private bool playerHasWon = false;
+    private bool isFirstGame = true;
+
+    [SerializeField] private Text _finalScore; 
+
     [Header("Audio Settings")]
     [SerializeField] private AudioClip winSound; // The win sound clip
     [SerializeField] private AudioClip loseSound; // The lose sound clip
@@ -53,6 +57,7 @@ public class GameManager : Singleton<GameManager>
     private void Awake()
     {
         ShowMainMenu();
+        DontDestroyOnLoad(highScoreUI);
     }
 
     private void Update()
@@ -60,20 +65,24 @@ public class GameManager : Singleton<GameManager>
         if (Time.timeScale > 0f)
         {
             UpdateTimer();
-
         }
-
     }
     
     public void StartGame()
     {
+        if (isFirstGame)
+        {
+            PlayerPrefs.DeleteKey("HighScores");
+            isFirstGame = false;
+        }
+        
         mainMenuUI.SetActive(false);
         Time.timeScale = 1f;
         elapsedTime = 0f;
         timerText.SetActive(true);
         ScoreManager.Instance.ScoreText.SetActive(true);
         ScoreManager.Instance.ResetScore();
-
+      
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
         ground.transform.localScale = new Vector3(60, 1, 1);
@@ -133,6 +142,8 @@ public class GameManager : Singleton<GameManager>
 
     public void ExitGame()
     {
+        ScoreManager.Instance.DeleteHighScores();
+        isFirstGame = true;
         // Check if we are running in the Unity Editor
     #if UNITY_EDITOR
         // Stop play mode in the editor
@@ -150,6 +161,7 @@ public class GameManager : Singleton<GameManager>
 
     public void ShowHighScore()
     {
+        ScoreManager.Instance.ShowHighScores(); // Load and display high scores
         highScoreUI.SetActive(true);
     }
 
@@ -160,22 +172,33 @@ public class GameManager : Singleton<GameManager>
     
     public void GameOver()
     {
-        Time.timeScale = 0f;
         StopMusic();
         PlayLoseSound();
+        ScoreManager.Instance.SaveHighScores();
+
+        Time.timeScale = 0f;
 
         if (gameOverUI != null)
         {
             gameOverUI.SetActive(true);
         }
     }
-
+    
     public void PlayerWins()
     {
-        Time.timeScale = 0f; 
         playerHasWon = true; // Set the flag to true to track win state
         StopMusic();
         PlayWinSound();
+        
+        // Use elapsed time to calculate time taken to win
+        float timeTakenToWin = elapsedTime; // Directly use elapsed time
+        int finalScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
+
+        ScoreManager.Instance.AddHighScore(finalScore);  // Add the current score to the high scores list 
+        _finalScore.text = finalScore.ToString(); // Display the final score on the win screen
+        ScoreManager.Instance.SaveHighScores();
+        
+        Time.timeScale = 0f; 
 
         if (winScreenUI != null)
         {
@@ -184,6 +207,20 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private int CalculateHighScore(int score, float timeTaken)
+    {
+        // Calculate the time remaining
+        float timeRemaining = Mathf.Max(0, levelTime - timeTaken);
+    
+        // Scale the time bonus based on how much time is left
+        int timeBonus = Mathf.FloorToInt(timeRemaining); // Use time remaining directly as a bonus
+
+        // Calculate final score
+        int finalScore = score + timeBonus; // Add the time bonus to the score
+        return Mathf.Max(0, finalScore); // Ensure the score is not negative
+    }
+
+    
     private void StopMusic()
     {
         if (musicManager != null)
@@ -225,6 +262,7 @@ public class GameManager : Singleton<GameManager>
         {
             winScreenUI.SetActive(false);
         }
+        
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
