@@ -1,5 +1,5 @@
-# Midterm Project Proposal - VR Development Course
-Team Members: Or Hershko and Adva Levin
+# Midterm Project - VR Development & Unity Course
+Team Members: Or Hershko and Adva Levine
 
 # Introduction:
 The midterm project will be a shameless clone of Super Mario Bros. (1985).
