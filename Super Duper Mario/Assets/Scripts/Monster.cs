@@ -69,10 +69,7 @@ public class Monster : MonoBehaviour
 
     private IEnumerator DieAfterAnimation()
     {
-        // חכה למשך זמן האנימציה
         yield return new WaitForSeconds(0.15f);
-
-        // השמדת האובייקט לאחר סיום האנימציה
         Destroy(gameObject);
     }
 

@@ -4,8 +4,8 @@ using UnityEngine.UI;
 public class MusicManager : MonoBehaviour
 {
     private AudioSource _audioSource;
-    public Slider volumeSlider;  // Slider for volume control
-    public Button muteButton; // Button to mute the music
+    public Slider volumeSlider;  
+    public Button muteButton; 
     private bool isMuted = false;
 
     void Start()
@@ -14,9 +14,8 @@ public class MusicManager : MonoBehaviour
         
         if (_audioSource != null)
         {
-            _audioSource.Play();  // Starts playing the music
+            _audioSource.Play();  
             
-            // Initialize volume slider
             if (volumeSlider != null)
             {
                 volumeSlider.minValue = 0;
@@ -25,7 +24,6 @@ public class MusicManager : MonoBehaviour
                 volumeSlider.onValueChanged.AddListener(SetVolume);
             }
 
-            // Initialize mute button
             if (muteButton != null)
             {
                 muteButton.onClick.AddListener(ToggleMute);
@@ -33,7 +31,6 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    // Play the music
     public void PlayMusic()
     {
         if (!_audioSource.isPlaying)
@@ -46,7 +43,7 @@ public class MusicManager : MonoBehaviour
     {
         if (_audioSource.isPlaying)
         {
-            _audioSource.Stop();  // Stops the music
+            _audioSource.Stop();  
         }
     }
 
@@ -54,31 +51,28 @@ public class MusicManager : MonoBehaviour
     {
         if (_audioSource.isPlaying)
         {
-            _audioSource.Pause();  // Pauses the music
+            _audioSource.Pause();  
         }
     }
 
     public void ResumeMusic()
     {
-        _audioSource.UnPause();  // Resumes the music
+        _audioSource.UnPause();  
     }
-    // Set volume level
     public void SetVolume(float volume)
     {
-        if (!isMuted) // Only update volume if not muted
+        if (!isMuted) 
         {
             _audioSource.volume = volume;
         }
         
     }
     
-    // Toggle mute/unmute
     public void ToggleMute()
     {
         isMuted = !isMuted;
         _audioSource.mute = isMuted;
 
-        // Update volume based on mute state
         if (isMuted)
         {
             _audioSource.volume = 0;

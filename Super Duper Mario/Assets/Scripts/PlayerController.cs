@@ -9,9 +9,9 @@ public class PlayerController : Singleton<PlayerController>
     public int CharacterSelectionIndex { get; set; } = 0;
     
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f;//the speed of the player
-    [SerializeField] private float jumpForce = 6f;//the force of the jump
-    [SerializeField] private LayerMask groundLayer;//the layer the player can jump from
+    [SerializeField] private float moveSpeed = 5f; 
+    [SerializeField] private float jumpForce = 6f; 
+    [SerializeField] private LayerMask groundLayer; //the layer the player can jump from
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
     
@@ -24,19 +24,19 @@ public class PlayerController : Singleton<PlayerController>
     private float scoreUpdateInterval = 1f; // Update score every 1 seconds
 
     // Animation settings
-    private bool facingRight = true;//check if the player is facing right
-    private float moveInput;//the input for the movement
-    private bool jumpInput;//the input for the jump
-    private bool isGrounded;//check if the player is on the ground
+    private bool facingRight = true; //check if the player is facing right
+    private float moveInput; //the input for the movement
+    private bool jumpInput; //the input for the jump
+    private bool isGrounded; //check if the player is on the ground
 
     [Header("Audio Settings")]
-    [SerializeField] private AudioClip jumpSound; // The jump sound
+    [SerializeField] private AudioClip jumpSound; 
     private AudioSource audioSource;
-    private bool isJumpMuted = false; // Mute state for jump sound
+    private bool isJumpMuted = false; 
 
-    private Vector3 _initialPosition = new Vector3(-15f, 0, 0); //the beginning position of the player (far left of the screen)
-    private Rigidbody2D _rb;    //the rigidbody of the player
-    GameObject _player;     //the player object
+    private Vector3 _initialPosition = new Vector3(-15f, 0, 0); 
+    private Rigidbody2D _rb;    
+    GameObject _player;     
     
     private float jumpForceMultiplier = 1f;
     private float coinMultiplier = 5f;
@@ -96,13 +96,12 @@ public class PlayerController : Singleton<PlayerController>
     {
         isJumpMuted = !isJumpMuted;
         
-        // Deselect the button to prevent keyboard input
         EventSystem.current.SetSelectedGameObject(null);
     }
 
     void PlayJumpSound()
     {
-        if (jumpSound != null && !isJumpMuted) // Check mute state
+        if (jumpSound != null && !isJumpMuted) 
         {
             audioSource.PlayOneShot(jumpSound);
         }
@@ -137,10 +136,9 @@ public class PlayerController : Singleton<PlayerController>
     {
         if (_player != null)
         {
-            Destroy(_player); // מחק את השחקן הנוכחי
+            Destroy(_player); 
         }
     
-        // צור את השחקן מחדש עם ה-prefab הנבחר
         _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition, Quaternion.identity);
         _rb = _player.GetComponent<Rigidbody2D>();
 
@@ -149,26 +147,22 @@ public class PlayerController : Singleton<PlayerController>
             _rb = _player.AddComponent<Rigidbody2D>();
         }
 
-        // עדכון האנימטור של השחקן החדש
         _animator = _player.GetComponent<Animator>();
         
     }
     
-    // Start is called before the first frame update
     void Start()
     {
         _animator = _player.GetComponent<Animator>();
-        audioSource = gameObject.AddComponent<AudioSource>(); // Adding an AudioSource component
+        audioSource = gameObject.AddComponent<AudioSource>(); 
         audioSource.volume = 0.3f;
-        lastPosition = _player.transform.position; //for the scores calculation
+        lastPosition = _player.transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         moveInput = Input.GetAxisRaw("Horizontal");
         
-        // Check if the player is grounded
         isGrounded = IsGrounded();
         
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -181,14 +175,11 @@ public class PlayerController : Singleton<PlayerController>
             _animator.SetBool("IsJumping", false);
         }
         
-        // Calculate forward distance traveled since the last frame
         float distanceX = _player.transform.position.x - lastPosition.x;
     
-        if (distanceX > 0) // Only accumulate forward movement (positive x direction)
+        if (distanceX > 0) // Only add distance if moving forward
         {
-            // Accumulate the forward distance traveled
             distanceTraveled += distanceX;
-            // Update last position
             lastPosition = _player.transform.position;
         }
 
@@ -240,26 +231,22 @@ public class PlayerController : Singleton<PlayerController>
     {
         Move();
         
-        // Jump if grounded and the jump button is pressed
         if (jumpInput)
         {
             Jump();
             jumpInput = false;
         }
-        if (_rb.velocity.y <= 0) // When falling down
+        if (_rb.velocity.y <= 0) 
         {
-            _rb.gravityScale = 1; // Reset gravity scale
+            _rb.gravityScale = 1;
         }
     }
     
     private void Move()
     {
-        // Set horizontal velocity
         _rb.velocity = new Vector2(moveInput * moveSpeed, _rb.velocity.y);
-        
         HandleWalkingAnimations();
        
-        // Flip the sprite based on movement direction
         if (moveInput > 0 && !facingRight)
             Flip();
         else if (moveInput < 0 && facingRight)
@@ -301,17 +288,9 @@ public class PlayerController : Singleton<PlayerController>
 
     public void Die()
     {
-        if (GameManager.Instance.HasPlayerWon()) return; // Prevent dying if the player has won
-        // נטרול השליטה בשחקן
+        if (GameManager.Instance.HasPlayerWon()) return;
         enabled = false;
-        // אפשר להוסיף אנימציית מוות
-        // הצגת מסך Game Over
         GameManager.Instance.GameOver();
-    }
-
-    public void SetPlayerActive(bool b)
-    {
-        _player.SetActive(b);
     }
     
 }
