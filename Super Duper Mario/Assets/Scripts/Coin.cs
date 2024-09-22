@@ -4,10 +4,10 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     [SerializeField] private int coinValue = 1;
-    [SerializeField] private AudioClip coinCollectSound; // Coin collection sound
-    private static bool isCoinMuted = false; // Static mute state for all coins
+    [SerializeField] private AudioClip coinCollectSound;
+    private static bool isCoinMuted = false; 
 
-    private AudioSource audioSource; // AudioSource for playing sound
+    private AudioSource audioSource;
     
     private void Start()
     {
@@ -23,27 +23,24 @@ public class Coin : MonoBehaviour
             PlayerController player = FindObjectOfType<PlayerController>();
             int totalCoinValue = Mathf.RoundToInt(coinValue * player.GetCoinMultiplier());
             ScoreManager.Instance.AddScore(totalCoinValue);
-            // Play the coin sound only if it's not muted
+
             if (coinCollectSound != null && !isCoinMuted)
             {
                 PlayCoinSound();
             }
 
-            // Destroy the coin immediately
             Destroy(gameObject);
         }
     }
     
     private void PlayCoinSound()
     {
-        // Create a temporary GameObject for the sound
         GameObject soundObject = new GameObject("CoinSound");
         AudioSource soundSource = soundObject.AddComponent<AudioSource>();
         soundSource.clip = coinCollectSound;
-        soundSource.volume = 0.5f; // Adjust the volume if necessary
+        soundSource.volume = 0.5f; 
         soundSource.Play();
 
-        // Destroy the sound object after the sound has played
         Destroy(soundObject, coinCollectSound.length);
     }
     

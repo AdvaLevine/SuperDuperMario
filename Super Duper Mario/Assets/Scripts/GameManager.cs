@@ -18,7 +18,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private GameObject winScreenUI;
     [SerializeField] private GameObject timeUpUI;
-
+    [SerializeField] private GameObject pauseMenuUI;
+    
     [Header("Time Settings")]
     [SerializeField] private Text _timer; 
     private float elapsedTime = 0f;
@@ -29,6 +30,7 @@ public class GameManager : Singleton<GameManager>
     
     private bool playerHasWon = false;
     private bool isFirstGame = true;
+    private bool isGamePaused = false;
 
     [SerializeField] private Text _finalScore; 
 
@@ -62,7 +64,12 @@ public class GameManager : Singleton<GameManager>
 
     private void Update()
     {
-        if (Time.timeScale > 0f)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePauseGame();
+        }
+
+        if (!isGamePaused && Time.timeScale > 0f)
         {
             UpdateTimer();
         }
@@ -84,27 +91,41 @@ public class GameManager : Singleton<GameManager>
         ScoreManager.Instance.ResetScore();
       
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
-        GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
-        ground.transform.localScale = new Vector3(60, 1, 1);
-        Material groundMaterial = new Material(Shader.Find("Unlit/Transparent"));
-        groundMaterial.mainTexture = _groundPrefab.GetComponent<SpriteRenderer>().sprite.texture;
-        groundMaterial.mainTextureScale = new Vector2(60, 1);
-        ground.GetComponent<SpriteRenderer>().material = groundMaterial;
-
-        _cameraFollow = Camera.main.GetComponent<CameraFollow>();
-        _cameraFollow.LeftBound = GameObject.Find("Left Bounds").transform;
-        _cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
-        _cameraFollow.CalculateBounds();
+        CreateGroundFromPrefab();
+        CalculateBoundsForCamera();
 
         _playerController = PlayerController.Instance;
         _playerController.SetCameraFollow(_cameraFollow);
         
+        SetUpAudioInGame();
+    }
+
+    private void SetUpAudioInGame()
+    {
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
         musicManager = FindObjectOfType<MusicManager>();
+    }
+
+    private void CalculateBoundsForCamera()
+    {
+        _cameraFollow = Camera.main.GetComponent<CameraFollow>();
+        _cameraFollow.LeftBound = GameObject.Find("Left Bounds").transform;
+        _cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
+        _cameraFollow.CalculateBounds();
+    }
+
+    private void CreateGroundFromPrefab()
+    {
+        GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
+        ground.transform.localScale = new Vector3(60, 1, 1);
+        Material groundMaterial = new Material(Shader.Find("Unlit/Transparent"));
+        groundMaterial.mainTexture = _groundPrefab.GetComponent<SpriteRenderer>().sprite.texture;
+        groundMaterial.mainTextureScale = new Vector2(60, 1);
+        ground.GetComponent<SpriteRenderer>().material = groundMaterial;
     }
 
     private void UpdateTimer()
@@ -123,7 +144,8 @@ public class GameManager : Singleton<GameManager>
                 StopMusic();
                 PlayLoseSound();
                 timeUpUI.SetActive(true);
-                PlayerController.Instance.Die(); // So wont be able to move after time is up
+                PlayerController.Instance.Die();
+                gameOverUI.SetActive(false);
             }
 
             _timer.text = "00:00";
@@ -144,14 +166,11 @@ public class GameManager : Singleton<GameManager>
     {
         ScoreManager.Instance.DeleteHighScores();
         isFirstGame = true;
-        // Check if we are running in the Unity Editor
-    #if UNITY_EDITOR
-        // Stop play mode in the editor
-        UnityEditor.EditorApplication.isPlaying = false;
-    #else
-        // Quit the application in the build
-        Application.Quit();
-    #endif
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 
     public void SetDifficulty(int difficulty)
@@ -161,7 +180,7 @@ public class GameManager : Singleton<GameManager>
 
     public void ShowHighScore()
     {
-        ScoreManager.Instance.ShowHighScores(); // Load and display high scores
+        ScoreManager.Instance.ShowHighScores(); 
         highScoreUI.SetActive(true);
     }
 
@@ -186,24 +205,23 @@ public class GameManager : Singleton<GameManager>
     
     public void PlayerWins()
     {
-        playerHasWon = true; // Set the flag to true to track win state
+        playerHasWon = true; 
         StopMusic();
         PlayWinSound();
         
         // Use elapsed time to calculate time taken to win
-        float timeTakenToWin = elapsedTime; // Directly use elapsed time
+        float timeTakenToWin = elapsedTime; 
         int finalScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
 
-        ScoreManager.Instance.AddHighScore(finalScore);  // Add the current score to the high scores list 
-        _finalScore.text = finalScore.ToString(); // Display the final score on the win screen
+        ScoreManager.Instance.AddHighScore(finalScore); 
+        _finalScore.text = finalScore.ToString(); 
         ScoreManager.Instance.SaveHighScores();
         
         Time.timeScale = 0f; 
 
         if (winScreenUI != null)
         {
-            //todo: ADD animation for flag and mario dissapearing
-            winScreenUI.SetActive(true); // Activate the win screen UI
+            winScreenUI.SetActive(true); 
         }
     }
 
@@ -213,11 +231,11 @@ public class GameManager : Singleton<GameManager>
         float timeRemaining = Mathf.Max(0, levelTime - timeTaken);
     
         // Scale the time bonus based on how much time is left
-        int timeBonus = Mathf.FloorToInt(timeRemaining); // Use time remaining directly as a bonus
+        int timeBonus = Mathf.FloorToInt(timeRemaining); 
 
         // Calculate final score
-        int finalScore = score + timeBonus; // Add the time bonus to the score
-        return Mathf.Max(0, finalScore); // Ensure the score is not negative
+        int finalScore = score + timeBonus; 
+        return Mathf.Max(0, finalScore); 
     }
 
     
@@ -225,14 +243,14 @@ public class GameManager : Singleton<GameManager>
     {
         if (musicManager != null)
         {
-            musicManager.StopMusic(); // Call the stop music method in MusicManager
+            musicManager.StopMusic();
         }
     }
     private void PlayWinSound()
     {
         if (winSound != null && audioSource != null)
         {
-            audioSource.PlayOneShot(winSound); // Play the win sound
+            audioSource.PlayOneShot(winSound); 
         }
 
     }
@@ -241,7 +259,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (loseSound != null && audioSource != null)
         {
-            audioSource.PlayOneShot(loseSound); // Play the lose sound
+            audioSource.PlayOneShot(loseSound); 
         }
         
     }
@@ -265,5 +283,41 @@ public class GameManager : Singleton<GameManager>
         
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    
+    public void TogglePauseGame()
+    {
+        isGamePaused = !isGamePaused;
+
+        if (isGamePaused)
+        {
+            PauseGame();
+        }
+        else
+        {
+            ResumeGame();
+        }
+    }
+
+    private void PauseGame()
+    {
+        StopMusic();
+        Time.timeScale = 0f;  
+        pauseMenuUI.SetActive(true);  
+    }
+
+    private void ResumeGame()
+    {
+        ResumeMusic();
+        Time.timeScale = 1f;  
+        pauseMenuUI.SetActive(false); 
+    }
+
+    private void ResumeMusic()
+    {
+        if (musicManager != null)
+        {
+            musicManager.ResumeMusic(); 
+        }
     }
 }

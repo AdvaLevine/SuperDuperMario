@@ -13,7 +13,6 @@ public class CameraFollow : MonoBehaviour
     private float _smoothDampTime = 0.15f;
     private Vector3 _smoothDampVelocity = Vector3.zero;
 
-    // Update is called once per frame
     void Update()
     {
         if(PlayerTransform != null)

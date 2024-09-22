@@ -4,18 +4,18 @@ using UnityEngine.UI;
 
 public class ScoreManager : Singleton<ScoreManager>
 {
-    [SerializeField] private Text _score; // Reference to the child Text component (e.g., "Score")
-    [SerializeField] private GameObject scoreText; // Reference to the parent Text component (e.g., "ScoreText")
+    [SerializeField] private Text _score; 
+    [SerializeField] private GameObject scoreText; 
 
     [SerializeField] private GameObject scorePrefab; // Prefab for score entries
     [SerializeField] private Transform content; // Content area of the Scroll View
 
     private List<int> highScores = new List<int>(); // List to store high scores
 
-    public GameObject ScoreText => scoreText; // Public property to access the scoreText
+    public GameObject ScoreText => scoreText; 
 
     private int score;
-    public int Score => score; // Add this property to expose the current score
+    public int Score => score; 
 
 
     private void Start()
@@ -58,7 +58,7 @@ public class ScoreManager : Singleton<ScoreManager>
             }
 
             UpdateHighScoreUI();
-            SaveHighScores(); // Save updated high scores
+            SaveHighScores(); 
         }
     }
     
@@ -118,7 +118,6 @@ public class ScoreManager : Singleton<ScoreManager>
     
     private void OnApplicationQuit()
     {
-        // Delete high scores when the application quits
         DeleteHighScores();
     }
     public void ShowHighScores()
