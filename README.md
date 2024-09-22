@@ -37,7 +37,7 @@ There will be no indication of whether a Question Mark Block gives a good or bad
 Throughout the game, there will be monsters. If the player collides with a monster, they lose, and the game ends. However, if the player jumps on the monster's head, the monster dies, and the player earns points, allowing the game to continue.
 
 If the player achieves a new high score, a UI element will congratulate them. The main menu will then be shown again.
-
+At any given time during thr game the player can puse the game using esc button
 
 ## THERES AN EASTER EGG!
 If you press shrek character your player is changing to the shrek character, else if you press mario or dont do a thing- you've got mario!
