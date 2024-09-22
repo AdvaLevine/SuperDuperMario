@@ -30,6 +30,8 @@ public class PlayerController : Singleton<PlayerController>
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip jumpSound; 
+    [SerializeField] private AudioClip marioSelectSound; 
+    [SerializeField] private  AudioClip shrekSelectSound; 
     private AudioSource audioSource;
     private bool isJumpMuted = false; 
 
@@ -119,6 +121,11 @@ public class PlayerController : Singleton<PlayerController>
     
     public void OnMarioImageClick()
     {
+        // Play Mario selection sound
+        if (marioSelectSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(marioSelectSound);
+        }
         SwitchCharacter();
         CharacterSelectionIndex = 0;
         Debug.Log("Mario selected");
@@ -126,6 +133,10 @@ public class PlayerController : Singleton<PlayerController>
     
     public void OnShrekImageClick()
     {
+        if (shrekSelectSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shrekSelectSound);
+        }
         SwitchCharacter();
         CharacterSelectionIndex = 1;
         Debug.Log("Shrek selected");
