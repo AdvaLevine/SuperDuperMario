@@ -46,15 +46,15 @@ public class ScoreManager : Singleton<ScoreManager>
     public void AddHighScore(int newScore)
     {
         // Only add the new score if it's higher than the lowest in the top 5 or if we have fewer than 5 scores
-        if (highScores.Count < 5 || newScore > highScores[highScores.Count - 1])
+        if (highScores.Count < 10 || newScore > highScores[highScores.Count - 1])
         {
             highScores.Add(newScore);
             highScores.Sort((a, b) => b.CompareTo(a)); // Sort in descending order
             
             // Keep only the top 5 scores
-            if (highScores.Count > 5)
+            if (highScores.Count > 10)
             {
-                highScores.RemoveAt(5);
+                highScores.RemoveAt(10);
             }
 
             UpdateHighScoreUI();

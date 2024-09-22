@@ -304,6 +304,8 @@ public class GameManager : Singleton<GameManager>
         StopMusic();
         Time.timeScale = 0f;  
         pauseMenuUI.SetActive(true);  
+        ScoreManager.Instance.SaveHighScores();
+
     }
 
     private void ResumeGame()
