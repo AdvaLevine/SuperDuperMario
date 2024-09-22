@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
+    [Header("Monster Settings")]
     [SerializeField] private float moveSpeed = 2f;
+    
     private Rigidbody2D _rb;
     private Animator _animator;
     private bool movingRight = true;
@@ -59,8 +61,7 @@ public class Monster : MonoBehaviour
             }
         }
     }
-
-  
+    
     private void Die()
     {
         _animator.SetTrigger("Die");

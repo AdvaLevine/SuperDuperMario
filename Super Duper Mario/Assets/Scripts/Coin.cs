@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    [Header("Coin Settings")]
     [SerializeField] private int coinValue = 1;
     [SerializeField] private AudioClip coinCollectSound;
+    
     private static bool isCoinMuted = false; 
-
     private AudioSource audioSource;
     
     private void Start()
@@ -22,6 +23,7 @@ public class Coin : MonoBehaviour
         {
             PlayerController player = FindObjectOfType<PlayerController>();
             int totalCoinValue = Mathf.RoundToInt(coinValue * player.GetCoinMultiplier());
+            
             ScoreManager.Instance.AddScore(totalCoinValue);
 
             if (coinCollectSound != null && !isCoinMuted)
@@ -37,10 +39,10 @@ public class Coin : MonoBehaviour
     {
         GameObject soundObject = new GameObject("CoinSound");
         AudioSource soundSource = soundObject.AddComponent<AudioSource>();
+        
         soundSource.clip = coinCollectSound;
         soundSource.volume = 0.5f; 
         soundSource.Play();
-
         Destroy(soundObject, coinCollectSound.length);
     }
     

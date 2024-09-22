@@ -25,18 +25,24 @@ public class GameManager : Singleton<GameManager>
     private float elapsedTime = 0f;
     public GameObject timerText;
     [SerializeField] private float levelTime = 120f; 
-    [Header("Difficulty Settings")]
-    [SerializeField] private Button easyButton; // כפתור ה-Easy
     
+    [Header("Difficulty Settings")]
+    [SerializeField] private Button easyButton; 
+    
+    // Game state variables
     private bool playerHasWon = false;
     private bool isFirstGame = true;
     private bool isGamePaused = false;
 
+    [Header("Final Score Settings")]
     [SerializeField] private Text _finalScore; 
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip winSound; // The win sound clip
     [SerializeField] private AudioClip loseSound; // The lose sound clip
+    
+    private CameraFollow _cameraFollow;
+    private PlayerController _playerController;
     private AudioSource audioSource;
     private MusicManager musicManager;
 
@@ -47,11 +53,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     public Difficulty CurrentDifficulty { get; private set; } = Difficulty.Easy;
-
-    private CameraFollow _cameraFollow;
-    private PlayerController _playerController;
-
-
+    
     public bool HasPlayerWon()
     {
         return playerHasWon;
@@ -123,6 +125,7 @@ public class GameManager : Singleton<GameManager>
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
         ground.transform.localScale = new Vector3(60, 1, 1);
         Material groundMaterial = new Material(Shader.Find("Unlit/Transparent"));
+        
         groundMaterial.mainTexture = _groundPrefab.GetComponent<SpriteRenderer>().sprite.texture;
         groundMaterial.mainTextureScale = new Vector2(60, 1);
         ground.GetComponent<SpriteRenderer>().material = groundMaterial;
@@ -166,6 +169,7 @@ public class GameManager : Singleton<GameManager>
     {
         ScoreManager.Instance.DeleteHighScores();
         isFirstGame = true;
+        
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -237,33 +241,7 @@ public class GameManager : Singleton<GameManager>
         int finalScore = score + timeBonus; 
         return Mathf.Max(0, finalScore); 
     }
-
-    
-    private void StopMusic()
-    {
-        if (musicManager != null)
-        {
-            musicManager.StopMusic();
-        }
-    }
-    private void PlayWinSound()
-    {
-        if (winSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(winSound); 
-        }
-
-    }
-
-    private void PlayLoseSound()
-    {
-        if (loseSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(loseSound); 
-        }
-        
-    }
-
+   
     public void RestartGame()
     {
         if (gameOverUI != null)
@@ -304,6 +282,8 @@ public class GameManager : Singleton<GameManager>
         StopMusic();
         Time.timeScale = 0f;  
         pauseMenuUI.SetActive(true);  
+        ScoreManager.Instance.SaveHighScores();
+
     }
 
     private void ResumeGame()
@@ -320,4 +300,30 @@ public class GameManager : Singleton<GameManager>
             musicManager.ResumeMusic(); 
         }
     }
+     
+    private void StopMusic()
+    {
+        if (musicManager != null)
+        {
+            musicManager.StopMusic();
+        }
+    }
+    private void PlayWinSound()
+    {
+        if (winSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(winSound); 
+        }
+
+    }
+
+    private void PlayLoseSound()
+    {
+        if (loseSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(loseSound); 
+        }
+        
+    }
+
 }
