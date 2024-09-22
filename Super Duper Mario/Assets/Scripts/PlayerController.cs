@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : Singleton<PlayerController>
 {
+    [Header("Character Selection")]
     [SerializeField] private GameObject[] _playerPrefab;
     public int CharacterSelectionIndex { get; set; } = 0;
     
@@ -14,8 +15,6 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private LayerMask groundLayer; //the layer the player can jump from
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
-    
-    // Score settings
     [Header("Score Settings")]
     [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
     private Vector3 lastPosition;
@@ -34,19 +33,22 @@ public class PlayerController : Singleton<PlayerController>
     private AudioSource audioSource;
     private bool isJumpMuted = false; 
 
+    // Initial position of the player
     private Vector3 _initialPosition = new Vector3(-15f, 0, 0); 
     private Rigidbody2D _rb;    
     GameObject _player;     
     
+    // Power-up settings
     private float jumpForceMultiplier = 1f;
     private float coinMultiplier = 5f;
 
+    // Coroutines for power-ups
     private Coroutine jumpForceCoroutine;
     private Coroutine coinMultiplierCoroutine;
     
+    // Animation settings
     private Animator _animator;
-   
-
+    
     public void SetJumpForceMultiplier(float multiplier, float duration = 5f)
     {
         if (jumpForceCoroutine != null)
@@ -90,12 +92,10 @@ public class PlayerController : Singleton<PlayerController>
         HandleJumpAnimations();
         _rb.gravityScale = jumpGravityScale;
         _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
-
     }
     public void ToggleJumpMute()
     {
         isJumpMuted = !isJumpMuted;
-        
         EventSystem.current.SetSelectedGameObject(null);
     }
 
@@ -110,7 +110,6 @@ public class PlayerController : Singleton<PlayerController>
     private void Awake()
     {
         _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition , Quaternion.identity);
-
         _rb = _player.GetComponent<Rigidbody2D>();
         if (_rb == null)
         {
@@ -162,7 +161,6 @@ public class PlayerController : Singleton<PlayerController>
     void Update()
     {
         moveInput = Input.GetAxisRaw("Horizontal");
-        
         isGrounded = IsGrounded();
         
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -225,7 +223,6 @@ public class PlayerController : Singleton<PlayerController>
         distanceTraveled = 0f; // Reset distance traveled
 
     }
-
     
     private void FixedUpdate()
     {
@@ -236,6 +233,7 @@ public class PlayerController : Singleton<PlayerController>
             Jump();
             jumpInput = false;
         }
+        
         if (_rb.velocity.y <= 0) 
         {
             _rb.gravityScale = 1;
@@ -274,8 +272,7 @@ public class PlayerController : Singleton<PlayerController>
 
         return false;
     }
-
-
+    
     public void SetCameraFollow(CameraFollow cameraFollow)
     {
         cameraFollow.PlayerTransform = _player.transform;

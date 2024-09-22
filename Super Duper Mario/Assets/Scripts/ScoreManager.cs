@@ -4,20 +4,17 @@ using UnityEngine.UI;
 
 public class ScoreManager : Singleton<ScoreManager>
 {
-    [SerializeField] private Text _score; 
-    [SerializeField] private GameObject scoreText; 
-
+    [Header("Score Settings")]
+    [SerializeField] private Text _score; // Text object to display the score
+    [SerializeField] private GameObject scoreText; // Text object to display the score word
     [SerializeField] private GameObject scorePrefab; // Prefab for score entries
     [SerializeField] private Transform content; // Content area of the Scroll View
 
     private List<int> highScores = new List<int>(); // List to store high scores
-
     public GameObject ScoreText => scoreText; 
-
     private int score;
     public int Score => score; 
-
-
+    
     private void Start()
     {
         UpdateScoreUI();
@@ -125,5 +122,4 @@ public class ScoreManager : Singleton<ScoreManager>
         LoadHighScores();
         content.parent.gameObject.SetActive(true);
     }
-
 }

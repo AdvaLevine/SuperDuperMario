@@ -26,13 +26,12 @@ public class QuestionMarkBlock : MonoBehaviour
     {
         originalPosition = transform.position;
         _animator = GetComponent<Animator>();
-        // שינוי צבע בהתאם לדרגת הקושי והאפקט
         if (GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.Easy)
         {
             SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-            if (IsGoodEffect())
+            if (IsGoodEffect()) // if easy mode, make all blocks colored
             {
-                renderer.color = Color.green;
+                renderer.color = Color.green; 
             }
             else
             {
@@ -45,7 +44,7 @@ public class QuestionMarkBlock : MonoBehaviour
     {
         if (!_isHit && collision.gameObject.CompareTag("Player"))
         {
-            // בדיקה אם הפגיעה היא מלמטה
+            // Check if player is hitting the block from below
             if (collision.contacts[0].normal.y > 0.5f)
             {
                 _isHit = true;
@@ -99,7 +98,6 @@ public class QuestionMarkBlock : MonoBehaviour
         }
 
         transform.position = targetPosition;
-
         elapsedTime = 0;
         while (elapsedTime < jumpDuration)
         {
