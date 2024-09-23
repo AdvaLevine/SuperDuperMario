@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1495948351851119030}
   - component: {fileID: 2570223062672888944}
   - component: {fileID: 2045706108374683683}
+  - component: {fileID: 156105491014802543}
   m_Layer: 0
   m_Name: Shrek
   m_TagString: Player
@@ -180,3 +181,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &156105491014802543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870361626288827062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 522792f0b298e41619ea5fefade428ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  jumpForce: 6
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  jumpGravityScale: 0.5
+  pointMultiplier: 20
+  jumpSound: {fileID: 8300000, guid: fc061fe1795ab154896bdd67678b7732, type: 3}
+  marioSelectSound: {fileID: 0}
+  shrekSelectSound: {fileID: 0}

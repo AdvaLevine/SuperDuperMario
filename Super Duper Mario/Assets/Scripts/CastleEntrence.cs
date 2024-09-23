@@ -9,7 +9,7 @@ public class CastleEntrance : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             GameManager.Instance.PlayerWins();
-            PlayerController.Instance.Die();
+            //PlayerController.Instance.Die();
         }
     }
 }

@@ -3,11 +3,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerController : Singleton<PlayerController>
+public class PlayerController : MonoBehaviour//Singleton<PlayerController>
 {
-    [Header("Character Selection")]
-    [SerializeField] private GameObject[] _playerPrefab;
-    public int CharacterSelectionIndex { get; set; } = 0;
+    // [Header("Character Selection")]
+    // [SerializeField] private GameObject[] _playerPrefab;
+    // public int CharacterSelectionIndex { get; set; } = 0;
+    
+    // [Header("Player Settings")]
+    // public int playerID = 1; 
     
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f; 
@@ -24,9 +27,9 @@ public class PlayerController : Singleton<PlayerController>
 
     // Animation settings
     private bool facingRight = true; //check if the player is facing right
-    private float moveInput; //the input for the movement
-    private bool jumpInput; //the input for the jump
-    private bool isGrounded; //check if the player is on the ground
+    protected float moveInput; //the input for the movement
+    protected bool jumpInput; //the input for the jump
+    protected bool isGrounded; //check if the player is on the ground
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip jumpSound; 
@@ -35,10 +38,7 @@ public class PlayerController : Singleton<PlayerController>
     private AudioSource audioSource;
     private bool isJumpMuted = false; 
 
-    // Initial position of the player
-    private Vector3 _initialPosition = new Vector3(-15f, 0, 0); 
     private Rigidbody2D _rb;    
-    GameObject _player;     
     
     // Power-up settings
     private float jumpForceMultiplier = 1f;
@@ -111,13 +111,40 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Awake()
     {
-        _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition , Quaternion.identity);
-        _rb = _player.GetComponent<Rigidbody2D>();
+        // _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition , Quaternion.identity);
+        _rb = GetComponent<Rigidbody2D>();
         if (_rb == null)
         {
-            _rb = _player.AddComponent<Rigidbody2D>();
+            _rb = gameObject.AddComponent<Rigidbody2D>();
+        }
+        _animator = gameObject.GetComponent<Animator>();
+
+    }
+    
+    protected virtual void Update()
+    {}
+
+    protected void UpdatePlayer(int playerID)
+    {
+        string horizontalAxis = "Player" + playerID + "_Horizontal";
+        string jumpButton = "Player" + playerID + "_Jump";
+        
+        moveInput = Input.GetAxisRaw(horizontalAxis);
+        isGrounded = IsGrounded();
+    
+        if (Input.GetButtonDown(jumpButton) && isGrounded)
+        {
+            jumpInput = true;
+        }
+    
+        if (_animator.GetBool("IsJumping") && isGrounded)
+        {
+            _animator.SetBool("IsJumping", false);
         }
     }
+    
+
+
     
     public void OnMarioImageClick()
     {
@@ -126,8 +153,8 @@ public class PlayerController : Singleton<PlayerController>
         {
             audioSource.PlayOneShot(marioSelectSound);
         }
-        SwitchCharacter();
-        CharacterSelectionIndex = 0;
+        // SwitchCharacter();
+        // CharacterSelectionIndex = 0;
         Debug.Log("Mario selected");
     }
     
@@ -137,77 +164,45 @@ public class PlayerController : Singleton<PlayerController>
         {
             audioSource.PlayOneShot(shrekSelectSound);
         }
-        SwitchCharacter();
-        CharacterSelectionIndex = 1;
+        // SwitchCharacter();
+        // CharacterSelectionIndex = 1;
         Debug.Log("Shrek selected");
     }
     
-    public void SwitchCharacter()
-    {
-        if (_player != null)
-        {
-            Destroy(_player); 
-        }
-    
-        _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition, Quaternion.identity);
-        _rb = _player.GetComponent<Rigidbody2D>();
-
-        if (_rb == null)
-        {
-            _rb = _player.AddComponent<Rigidbody2D>();
-        }
-
-        _animator = _player.GetComponent<Animator>();
-        
-    }
+    // public void SwitchCharacter()
+    // {
+    //     if (_player != null)
+    //     {
+    //         Destroy(_player); 
+    //     }
+    //
+    //     _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition, Quaternion.identity);
+    //     _rb = _player.GetComponent<Rigidbody2D>();
+    //
+    //     if (_rb == null)
+    //     {
+    //         _rb = _player.AddComponent<Rigidbody2D>();
+    //     }
+    //
+    //     _animator = _player.GetComponent<Animator>();
+    //     
+    // }
     
     void Start()
     {
-        _animator = _player.GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
         audioSource = gameObject.AddComponent<AudioSource>(); 
         audioSource.volume = 0.3f;
-        lastPosition = _player.transform.position;
+        lastPosition = transform.position;
     }
 
-    void Update()
-    {
-        moveInput = Input.GetAxisRaw("Horizontal");
-        isGrounded = IsGrounded();
-        
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            jumpInput = true;
-        }
-        
-        if(_animator.GetBool("IsJumping") && isGrounded)
-        {
-            _animator.SetBool("IsJumping", false);
-        }
-        
-        float distanceX = _player.transform.position.x - lastPosition.x;
     
-        if (distanceX > 0) // Only add distance if moving forward
-        {
-            distanceTraveled += distanceX;
-            lastPosition = _player.transform.position;
-        }
-
-        // Timer to update score every interval
-        timer += Time.deltaTime;
-        if (timer >= scoreUpdateInterval)
-        {
-            CalculateAndAddScore();
-            timer = 0f; // Reset timer
-        }
-    }
 
     private void HandleWalkingAnimations()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
-
         if (moveInput != 0)
         {
-            _animator.SetBool("IsWalking", true); 
+            _animator.SetBool("IsWalking", true);
         }
         else
         {
@@ -265,16 +260,16 @@ public class PlayerController : Singleton<PlayerController>
     private void Flip()
     {
         facingRight = !facingRight;
-        Vector3 scale = _player.transform.localScale;
+        Vector3 scale = transform.localScale;
         scale.x *= -1;
-        _player.transform.localScale = scale;
+        transform.localScale = scale;
     }
     
     private bool IsGrounded()
     {
         float rayLength = 0.2f;
     
-        RaycastHit2D hit = Physics2D.Raycast(_player.transform.position, Vector2.down, rayLength, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength, groundLayer);
 
         if (hit.collider != null)
         {
@@ -286,7 +281,7 @@ public class PlayerController : Singleton<PlayerController>
     
     public void SetCameraFollow(CameraFollow cameraFollow)
     {
-        cameraFollow.PlayerTransform = _player.transform;
+        cameraFollow.PlayerTransform = transform;
     }
     
     public void Bounce()

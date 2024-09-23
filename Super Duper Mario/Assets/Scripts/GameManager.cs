@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject _BackgroundPrefab;
     [SerializeField] private GameObject _monsterPrefab;
     [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private GameObject[] _playerPrefabs; // מערך של פריפאב שחקנים
 
     [Header("UI Elements")]
     [SerializeField] private GameObject mainMenuUI;
@@ -19,6 +21,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject winScreenUI;
     [SerializeField] private GameObject timeUpUI;
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private Button singlePlayerButton; // כפתור עבור שחקן אחד
+    [SerializeField] private Button twoPlayerButton;
     
     [Header("Time Settings")]
     [SerializeField] private Text _timer; 
@@ -42,9 +46,13 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private AudioClip loseSound; // The lose sound clip
     
     private CameraFollow _cameraFollow;
-    private PlayerController _playerController;
+    // private PlayerController _playerController;
     private AudioSource audioSource;
     private MusicManager musicManager;
+    
+    private int numberOfPlayers = 1; // ברירת מחדל - שחקן אחד
+    private List<PlayerController> players = new List<PlayerController>(); // רשימה של בקרי השחקנים
+
 
     public enum Difficulty
     {
@@ -95,11 +103,22 @@ public class GameManager : Singleton<GameManager>
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         CreateGroundFromPrefab();
         CalculateBoundsForCamera();
-
-        _playerController = PlayerController.Instance;
-        _playerController.SetCameraFollow(_cameraFollow);
-        
+        SetUpPlayers();
         SetUpAudioInGame();
+    }
+    
+    private void SetUpPlayers()
+    {
+        players.Clear();
+    
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            Vector3 spawnPosition = new Vector3(-15f + i * 0.5f, 0f, 0f); // מיקום התחלתי לכל שחקן
+            GameObject playerObject = Instantiate(_playerPrefabs[i], spawnPosition, Quaternion.identity);
+            PlayerController playerController = playerObject.GetComponent<PlayerController>();
+            playerController.SetCameraFollow(_cameraFollow);
+            players.Add(playerController);
+        }
     }
 
     private void SetUpAudioInGame()
@@ -119,6 +138,7 @@ public class GameManager : Singleton<GameManager>
         _cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
         _cameraFollow.CalculateBounds();
     }
+
 
     private void CreateGroundFromPrefab()
     {
@@ -147,12 +167,21 @@ public class GameManager : Singleton<GameManager>
                 StopMusic();
                 PlayLoseSound();
                 timeUpUI.SetActive(true);
-                PlayerController.Instance.Die();
+                // PlayerController.Instance.Die();
+                // foreach (var player in players)
+                // {
+                //     player.Die();
+                // }
                 gameOverUI.SetActive(false);
             }
 
             _timer.text = "00:00";
         }
+    }
+    
+    public void SetNumberOfPlayers(int numPlayers)
+    {
+        numberOfPlayers = numPlayers;
     }
 
     public void ShowMainMenu()
