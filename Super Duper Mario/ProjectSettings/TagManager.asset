@@ -12,6 +12,8 @@ TagManager:
   - Score
   - QuestionMarkSquare
   - Coin
+  - MonsterHard
+  - Flower Monster
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
+  - Flower Monsters
   - 
   - 
   - 
