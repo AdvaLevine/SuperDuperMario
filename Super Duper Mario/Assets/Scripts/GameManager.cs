@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -45,7 +46,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private AudioClip winSound; // The win sound clip
     [SerializeField] private AudioClip loseSound; // The lose sound clip
     
-    private CameraFollow _cameraFollow;
+    // private CameraFollow _cameraFollow;
     // private PlayerController _playerController;
     private AudioSource audioSource;
     private MusicManager musicManager;
@@ -70,6 +71,27 @@ public class GameManager : Singleton<GameManager>
     {
         ShowMainMenu();
         DontDestroyOnLoad(highScoreUI);
+    }
+    
+    private void CreateDivider()
+    {
+        // יצירת Canvas
+        GameObject canvasObject = new GameObject("DividerCanvas");
+        Canvas canvas = canvasObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        
+        // הוספת Image שישמש כפס
+        GameObject divider = new GameObject("Divider");
+        divider.transform.SetParent(canvas.transform);
+
+        // הגדרת RectTransform של הפס (Image)
+        RectTransform rectTransform = divider.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(5, Screen.height); // פס בגודל 5 פיקסלים לגובה המסך
+        rectTransform.anchoredPosition = new Vector2(0, 0); // מיקום הפס במרכז המסך
+
+        // הוספת רכיב Image ושינוי צבעו
+        Image image = divider.AddComponent<Image>();
+        image.color = Color.black; // ניתן להחליף לצבע אחר
     }
 
     private void Update()
@@ -102,24 +124,54 @@ public class GameManager : Singleton<GameManager>
       
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         CreateGroundFromPrefab();
-        CalculateBoundsForCamera();
-        SetUpPlayers();
+        if (numberOfPlayers == 2)
+        {
+            CreateDivider();
+            SetUpPlayers();
+        }
         SetUpAudioInGame();
+        Camera mainCamera = Camera.main;
+        if (mainCamera != null)
+        {
+            mainCamera.gameObject.SetActive(false);
+        }
     }
     
     private void SetUpPlayers()
     {
         players.Clear();
-    
+        
         for (int i = 0; i < numberOfPlayers; i++)
         {
             Vector3 spawnPosition = new Vector3(-15f + i * 0.5f, 0f, 0f); // מיקום התחלתי לכל שחקן
             GameObject playerObject = Instantiate(_playerPrefabs[i], spawnPosition, Quaternion.identity);
             PlayerController playerController = playerObject.GetComponent<PlayerController>();
-            playerController.SetCameraFollow(_cameraFollow);
             players.Add(playerController);
+
+            // יצירת מצלמה לכל שחקן
+            GameObject cameraObject = new GameObject("PlayerCamera" + (i + 1));
+            Camera playerCamera = cameraObject.AddComponent<Camera>();
+            
+            if (i == 0)
+            {
+                cameraObject.AddComponent<AudioListener>();
+            }
+
+            // חיבור המצלמה לשחקן
+            cameraObject.transform.SetParent(playerObject.transform); // המצלמה תהיה Child של השחקן
+            cameraObject.transform.localPosition = new Vector3(1, 1, -6); // הגדרת מיקום המצלמה יחסית לשחקן
+            playerCamera.orthographic = true; // מצלמה אורתוגרפית
+            playerCamera.orthographicSize = 2.7f; // גודל התצוגה האנכית של המצלמה
+            playerCamera.clearFlags = CameraClearFlags.SolidColor; // צבע רקע של המצלמה
+            
+            CalculateBoundsForCamera(playerCamera, playerObject.transform);
+
+            // חלוקת מסך (Split-Screen)
+            float width = 1f / numberOfPlayers; // מחשבים את החלק היחסי לכל שחקן במסך
+            playerCamera.rect = new Rect(i * width, 0, width, 1); // מגדירים את גבולות הצפייה של המצלמה
         }
     }
+
 
     private void SetUpAudioInGame()
     {
@@ -131,13 +183,16 @@ public class GameManager : Singleton<GameManager>
         musicManager = FindObjectOfType<MusicManager>();
     }
 
-    private void CalculateBoundsForCamera()
+    private void CalculateBoundsForCamera(Camera playerCamera, Transform playerTransform)
     {
-        _cameraFollow = Camera.main.GetComponent<CameraFollow>();
-        _cameraFollow.LeftBound = GameObject.Find("Left Bounds").transform;
-        _cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
-        _cameraFollow.CalculateBounds();
+        playerCamera.gameObject.AddComponent<CameraFollow>();
+        CameraFollow cameraFollow = playerCamera.GetComponent<CameraFollow>();
+        cameraFollow.LeftBound = GameObject.Find("Left Bounds").transform;
+        cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
+        cameraFollow.PlayerTransform = playerTransform;
+        cameraFollow.CalculateBounds();
     }
+
 
 
     private void CreateGroundFromPrefab()

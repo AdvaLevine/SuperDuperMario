@@ -1652,6 +1652,7 @@ GameObject:
   - component: {fileID: 4152934520953142110}
   - component: {fileID: 579535885746522813}
   - component: {fileID: 7239036651607013920}
+  - component: {fileID: 5317746227422826991}
   m_Layer: 6
   m_Name: crazy flower 2 (1)
   m_TagString: Flower Monster
@@ -1809,6 +1810,18 @@ CapsuleCollider2D:
   m_Offset: {x: -0.00970301, y: -0.0020791888}
   m_Size: {x: 0.15613876, y: 0.24415839}
   m_Direction: 0
+--- !u!114 &5317746227422826991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131687200904985096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d3e318de6294cab899af1ef0109400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1226260058919416984
 GameObject:
   m_ObjectHideFlags: 0
@@ -7332,6 +7345,7 @@ GameObject:
   - component: {fileID: 7391596477834080231}
   - component: {fileID: 7235336987739230465}
   - component: {fileID: 3453354139742305862}
+  - component: {fileID: 1034483841324245792}
   m_Layer: 6
   m_Name: crazy flower 2 (2)
   m_TagString: Flower Monster
@@ -7489,6 +7503,18 @@ CapsuleCollider2D:
   m_Offset: {x: -0.00970301, y: -0.0020791888}
   m_Size: {x: 0.15613876, y: 0.24415839}
   m_Direction: 0
+--- !u!114 &1034483841324245792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6081605415883716315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d3e318de6294cab899af1ef0109400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6165746621397943822
 GameObject:
   m_ObjectHideFlags: 0
@@ -7586,6 +7612,7 @@ GameObject:
   - component: {fileID: 5322642487749524456}
   - component: {fileID: 9169153969359090325}
   - component: {fileID: 6152281107600851757}
+  - component: {fileID: 6647702932722617938}
   m_Layer: 6
   m_Name: crazy flower 2 (3)
   m_TagString: Flower Monster
@@ -7743,6 +7770,18 @@ CapsuleCollider2D:
   m_Offset: {x: -0.00970301, y: -0.0020791888}
   m_Size: {x: 0.15613876, y: 0.24415839}
   m_Direction: 0
+--- !u!114 &6647702932722617938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6197135492219082924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d3e318de6294cab899af1ef0109400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6511588155617289467
 GameObject:
   m_ObjectHideFlags: 0
@@ -8352,6 +8391,7 @@ GameObject:
   - component: {fileID: 3216589474674874728}
   - component: {fileID: 5255531943376260190}
   - component: {fileID: 4391259631309453682}
+  - component: {fileID: 8396946823079689223}
   m_Layer: 6
   m_Name: crazy flower 2
   m_TagString: Flower Monster
@@ -8509,6 +8549,18 @@ CapsuleCollider2D:
   m_Offset: {x: -0.00970301, y: -0.0020791888}
   m_Size: {x: 0.15613876, y: 0.24415839}
   m_Direction: 0
+--- !u!114 &8396946823079689223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6955351273239877878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8d3e318de6294cab899af1ef0109400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7017154881289116033
 GameObject:
   m_ObjectHideFlags: 0
