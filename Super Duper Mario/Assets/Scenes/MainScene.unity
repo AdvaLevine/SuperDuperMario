@@ -449,8 +449,6 @@ MonoBehaviour:
   jumpGravityScale: 0.5
   pointMultiplier: 10
   jumpSound: {fileID: 8300000, guid: fc061fe1795ab154896bdd67678b7732, type: 3}
-  marioSelectSound: {fileID: 8300000, guid: f29523fe11fb77347a5db3048a5192e5, type: 3}
-  shrekSelectSound: {fileID: 8300000, guid: 181e9d0d03ba2c34ebe23e58c2b5b145, type: 3}
 --- !u!4 &123102658
 Transform:
   m_ObjectHideFlags: 0
@@ -6464,20 +6462,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 123102657}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: OnShrekImageClick
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 123102657}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        - m_Target: {fileID: 2116800622}
+          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
           m_MethodName: OnShrekImageClick
           m_Mode: 1
           m_Arguments:
@@ -7284,20 +7270,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 123102657}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-          m_MethodName: OnMarioImageClick
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 123102657}
-          m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        - m_Target: {fileID: 2116800622}
+          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
           m_MethodName: OnMarioImageClick
           m_Mode: 1
           m_Arguments:
@@ -9279,8 +9253,6 @@ MonoBehaviour:
   winScreenUI: {fileID: 248527756}
   timeUpUI: {fileID: 1008906403}
   pauseMenuUI: {fileID: 340996704}
-  singlePlayerButton: {fileID: 0}
-  twoPlayerButton: {fileID: 0}
   _timer: {fileID: 888796309}
   timerText: {fileID: 573368239}
   levelTime: 120
@@ -9288,6 +9260,8 @@ MonoBehaviour:
   _finalScore: {fileID: 1438946555}
   winSound: {fileID: 8300000, guid: 86d87f2bad204b54094f7eca01936331, type: 3}
   loseSound: {fileID: 8300000, guid: 0e01e30e1d9d22047bf2e5c8f801c4ce, type: 3}
+  marioSelectSound: {fileID: 8300000, guid: f29523fe11fb77347a5db3048a5192e5, type: 3}
+  shrekSelectSound: {fileID: 8300000, guid: 181e9d0d03ba2c34ebe23e58c2b5b145, type: 3}
 --- !u!4 &2116800623
 Transform:
   m_ObjectHideFlags: 0

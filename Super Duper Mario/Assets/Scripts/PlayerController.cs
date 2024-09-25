@@ -5,16 +5,10 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour//Singleton<PlayerController>
 {
-    // [Header("Character Selection")]
-    // [SerializeField] private GameObject[] _playerPrefab;
-    // public int CharacterSelectionIndex { get; set; } = 0;
-    
-    // [Header("Player Settings")]
-    // public int playerID = 1; 
     
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f; 
-    [SerializeField] private float jumpForce = 6f; 
+    [SerializeField] private float jumpForce = 4f; 
     [SerializeField] private LayerMask groundLayer; //the layer the player can jump from
     [SerializeField] private float jumpGravityScale = 0.5f; // Lower gravity during jump
 
@@ -33,8 +27,6 @@ public class PlayerController : MonoBehaviour//Singleton<PlayerController>
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip jumpSound; 
-    [SerializeField] private AudioClip marioSelectSound; 
-    [SerializeField] private  AudioClip shrekSelectSound; 
     private AudioSource audioSource;
     private bool isJumpMuted = false; 
 
@@ -111,7 +103,6 @@ public class PlayerController : MonoBehaviour//Singleton<PlayerController>
 
     private void Awake()
     {
-        // _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition , Quaternion.identity);
         _rb = GetComponent<Rigidbody2D>();
         if (_rb == null)
         {
@@ -142,51 +133,6 @@ public class PlayerController : MonoBehaviour//Singleton<PlayerController>
             _animator.SetBool("IsJumping", false);
         }
     }
-    
-
-
-    
-    public void OnMarioImageClick()
-    {
-        // Play Mario selection sound
-        if (marioSelectSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(marioSelectSound);
-        }
-        // SwitchCharacter();
-        // CharacterSelectionIndex = 0;
-        Debug.Log("Mario selected");
-    }
-    
-    public void OnShrekImageClick()
-    {
-        if (shrekSelectSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(shrekSelectSound);
-        }
-        // SwitchCharacter();
-        // CharacterSelectionIndex = 1;
-        Debug.Log("Shrek selected");
-    }
-    
-    // public void SwitchCharacter()
-    // {
-    //     if (_player != null)
-    //     {
-    //         Destroy(_player); 
-    //     }
-    //
-    //     _player = Instantiate(_playerPrefab[CharacterSelectionIndex], _initialPosition, Quaternion.identity);
-    //     _rb = _player.GetComponent<Rigidbody2D>();
-    //
-    //     if (_rb == null)
-    //     {
-    //         _rb = _player.AddComponent<Rigidbody2D>();
-    //     }
-    //
-    //     _animator = _player.GetComponent<Animator>();
-    //     
-    // }
     
     void Start()
     {
@@ -277,11 +223,6 @@ public class PlayerController : MonoBehaviour//Singleton<PlayerController>
         }
 
         return false;
-    }
-    
-    public void SetCameraFollow(CameraFollow cameraFollow)
-    {
-        cameraFollow.PlayerTransform = transform;
     }
     
     public void Bounce()

@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,8 +23,6 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject winScreenUI;
     [SerializeField] private GameObject timeUpUI;
     [SerializeField] private GameObject pauseMenuUI;
-    [SerializeField] private Button singlePlayerButton; // כפתור עבור שחקן אחד
-    [SerializeField] private Button twoPlayerButton;
     
     [Header("Time Settings")]
     [SerializeField] private Text _timer; 
@@ -46,13 +45,15 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private AudioClip winSound; // The win sound clip
     [SerializeField] private AudioClip loseSound; // The lose sound clip
     
-    // private CameraFollow _cameraFollow;
-    // private PlayerController _playerController;
     private AudioSource audioSource;
     private MusicManager musicManager;
+    [SerializeField] private AudioClip marioSelectSound; 
+    [SerializeField] private  AudioClip shrekSelectSound; 
     
     private int numberOfPlayers = 1; // ברירת מחדל - שחקן אחד
     private List<PlayerController> players = new List<PlayerController>(); // רשימה של בקרי השחקנים
+    public int CharacterSelectionIndex { get; set; } = 0;
+
 
 
     public enum Difficulty
@@ -72,7 +73,13 @@ public class GameManager : Singleton<GameManager>
         ShowMainMenu();
         DontDestroyOnLoad(highScoreUI);
     }
-    
+
+    public void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>(); 
+        audioSource.volume = 0.3f;
+    }
+
     private void CreateDivider()
     {
         // יצירת Canvas
@@ -127,8 +134,10 @@ public class GameManager : Singleton<GameManager>
         if (numberOfPlayers == 2)
         {
             CreateDivider();
-            SetUpPlayers();
         }
+
+        SetUpPlayers();
+        
         SetUpAudioInGame();
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
@@ -144,7 +153,13 @@ public class GameManager : Singleton<GameManager>
         for (int i = 0; i < numberOfPlayers; i++)
         {
             Vector3 spawnPosition = new Vector3(-15f + i * 0.5f, 0f, 0f); // מיקום התחלתי לכל שחקן
-            GameObject playerObject = Instantiate(_playerPrefabs[i], spawnPosition, Quaternion.identity);
+            GameObject playerObject;
+            
+            if (numberOfPlayers == 1)
+                playerObject = Instantiate(_playerPrefabs[CharacterSelectionIndex], spawnPosition, Quaternion.identity);
+            else
+                playerObject = Instantiate(_playerPrefabs[i], spawnPosition, Quaternion.identity);
+            
             PlayerController playerController = playerObject.GetComponent<PlayerController>();
             players.Add(playerController);
 
@@ -170,6 +185,27 @@ public class GameManager : Singleton<GameManager>
             float width = 1f / numberOfPlayers; // מחשבים את החלק היחסי לכל שחקן במסך
             playerCamera.rect = new Rect(i * width, 0, width, 1); // מגדירים את גבולות הצפייה של המצלמה
         }
+    }
+    
+    public void OnMarioImageClick()
+    {
+        // Play Mario selection sound
+        if (marioSelectSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(marioSelectSound);
+        }
+        CharacterSelectionIndex = 0;
+        Debug.Log("Mario selected");
+    }
+    
+    public void OnShrekImageClick()
+    {
+        if (shrekSelectSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shrekSelectSound);
+        }
+        CharacterSelectionIndex = 1;
+        Debug.Log("Shrek selected");
     }
 
 
