@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 6156426624162440324}
   - component: {fileID: -3474498057745371781}
   - component: {fileID: -6799123702240485360}
-  m_Layer: 6
+  - component: {fileID: -296374728385596350}
+  m_Layer: 0
   m_Name: Mario
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -106,7 +107,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -126,11 +127,11 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_LayerOverridePriority: 1
   m_ForceSendLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -180,3 +181,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-296374728385596350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8331913989538096856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a172d499bab14bae9a13fe7331f2917, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  jumpForce: 4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  jumpGravityScale: 0.5
+  pointMultiplier: 20
+  jumpSound: {fileID: 8300000, guid: fc061fe1795ab154896bdd67678b7732, type: 3}
+  marioSelectSound: {fileID: 8300000, guid: f29523fe11fb77347a5db3048a5192e5, type: 3}
+  shrekSelectSound: {fileID: 0}
