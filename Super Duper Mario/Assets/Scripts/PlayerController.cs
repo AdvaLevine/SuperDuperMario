@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour//Singleton<PlayerController>
+public class PlayerController : MonoBehaviour
 {
     
     [Header("Movement Settings")]

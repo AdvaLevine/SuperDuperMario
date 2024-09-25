@@ -9,7 +9,6 @@ public class ShrekController : PlayerController
     
     protected override void Update()
     {
-        Debug.Log("Shrek Update");
         UpdatePlayer(playerID); 
     }
 }

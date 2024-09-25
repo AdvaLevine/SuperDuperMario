@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject _BackgroundPrefab;
     [SerializeField] private GameObject _monsterPrefab;
     [SerializeField] private GameObject coinPrefab;
-    [SerializeField] private GameObject[] _playerPrefabs; // מערך של פריפאב שחקנים
+    [SerializeField] private GameObject[] _playerPrefabs; 
 
     [Header("UI Elements")]
     [SerializeField] private GameObject mainMenuUI;
@@ -131,6 +131,7 @@ public class GameManager : Singleton<GameManager>
       
         Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
         CreateGroundFromPrefab();
+        
         if (numberOfPlayers == 2)
         {
             CreateDivider();
@@ -258,11 +259,10 @@ public class GameManager : Singleton<GameManager>
                 StopMusic();
                 PlayLoseSound();
                 timeUpUI.SetActive(true);
-                // PlayerController.Instance.Die();
-                // foreach (var player in players)
-                // {
-                //     player.Die();
-                // }
+                foreach (var player in players)
+                {
+                    player.Die();
+                }
                 gameOverUI.SetActive(false);
             }
 
