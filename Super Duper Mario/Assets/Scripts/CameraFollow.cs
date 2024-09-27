@@ -21,13 +21,18 @@ public class CameraFollow : MonoBehaviour
         }
     }
     
-
-
-    public void CalculateBounds()
+    public void CalculateBounds(int numberOfPlayers)
     {
         Camera myCamera = GetComponent<Camera>();
         _cameraHeight = 2f * myCamera.orthographicSize;
-        _cameraWidth = _cameraHeight * (myCamera.aspect / 2f);
+        
+        if(numberOfPlayers>1)
+        {
+            _cameraWidth = _cameraHeight * (myCamera.aspect / 2f);
+        }
+        else{
+            _cameraWidth = _cameraHeight * myCamera.aspect;
+        }
         
         float leftBoundWidth = LeftBound.GetComponentInChildren<SpriteRenderer>().bounds.size.x / 2;
         float rightBoundWidth = RightBound.GetComponentInChildren<SpriteRenderer>().bounds.size.x / 2;

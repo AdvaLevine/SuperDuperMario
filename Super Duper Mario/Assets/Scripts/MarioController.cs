@@ -8,6 +8,7 @@ public class MarioController : PlayerController
     
     protected override void Update()
     {
-        UpdatePlayer(playerID); 
+        int totalPlayers = GameManager.Instance.NumberOfPlayers;
+        UpdatePlayer(playerID, totalPlayers); 
     }
 }

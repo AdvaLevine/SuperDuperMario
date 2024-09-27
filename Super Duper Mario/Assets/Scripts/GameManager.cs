@@ -1,7 +1,6 @@
 
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -11,7 +10,6 @@ public class GameManager : Singleton<GameManager>
 {
     [Header("Prefabs")]
     [SerializeField] private GameObject _groundPrefab;
-    [SerializeField] private GameObject _BackgroundPrefab;
     [SerializeField] private GameObject _monsterPrefab;
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject[] _playerPrefabs; 
@@ -23,6 +21,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject winScreenUI;
     [SerializeField] private GameObject timeUpUI;
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject levelUpUI;
+    
     
     [Header("Time Settings")]
     [SerializeField] private Text _timer; 
@@ -39,22 +39,24 @@ public class GameManager : Singleton<GameManager>
     private bool isGamePaused = false;
 
     [Header("Final Score Settings")]
-    [SerializeField] private Text _finalScore; 
+    [SerializeField] private Text _finalScore;
+    [SerializeField] private Text _levelScore;
+    private int TotalGameScore = 0;
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip winSound; // The win sound clip
     [SerializeField] private AudioClip loseSound; // The lose sound clip
-    
-    private AudioSource audioSource;
-    private MusicManager musicManager;
     [SerializeField] private AudioClip marioSelectSound; 
     [SerializeField] private  AudioClip shrekSelectSound; 
+    private AudioSource audioSource;
+    private MusicManager musicManager;
     
-    private int numberOfPlayers = 1; // ברירת מחדל - שחקן אחד
-    private List<PlayerController> players = new List<PlayerController>(); // רשימה של בקרי השחקנים
+    private int numberOfPlayers = 1; //deafault 1 player
+    private List<PlayerController> players = new List<PlayerController>(); // list of players in the game
+    
+    public List<PlayerController> Players => players;
     public int CharacterSelectionIndex { get; set; } = 0;
-
-
+    public int NumberOfPlayers => numberOfPlayers;
 
     public enum Difficulty
     {
@@ -129,7 +131,8 @@ public class GameManager : Singleton<GameManager>
         ScoreManager.Instance.ScoreText.SetActive(true);
         ScoreManager.Instance.ResetScore();
       
-        Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
+        // Start the level and instantiate the background
+        LoadLevelWithBackground();
         CreateGroundFromPrefab();
         
         if (numberOfPlayers == 2)
@@ -146,10 +149,23 @@ public class GameManager : Singleton<GameManager>
             mainCamera.gameObject.SetActive(false);
         }
     }
+    private void LoadLevelWithBackground()
+    {
+        // Load the next level
+        LevelManager.Instance.LoadLevel(LevelManager.Instance.CurrentLevelIndex);
+    }
     
     private void SetUpPlayers()
     {
         players.Clear();
+        
+        // Remove any existing AudioListeners before setting up new players
+        
+        AudioListener existingAudioListener = FindObjectOfType<AudioListener>();
+       if (existingAudioListener != null)
+       {
+        Destroy(existingAudioListener.gameObject);
+       }
         
         for (int i = 0; i < numberOfPlayers; i++)
         {
@@ -163,8 +179,8 @@ public class GameManager : Singleton<GameManager>
             
             PlayerController playerController = playerObject.GetComponent<PlayerController>();
             players.Add(playerController);
-
-            // יצירת מצלמה לכל שחקן
+            
+            //create cameras for each player
             GameObject cameraObject = new GameObject("PlayerCamera" + (i + 1));
             Camera playerCamera = cameraObject.AddComponent<Camera>();
             
@@ -172,10 +188,9 @@ public class GameManager : Singleton<GameManager>
             {
                 cameraObject.AddComponent<AudioListener>();
             }
-
-            // חיבור המצלמה לשחקן
+            //connect the camera to the player
             cameraObject.transform.SetParent(playerObject.transform); // המצלמה תהיה Child של השחקן
-            cameraObject.transform.localPosition = new Vector3(1, 1, -6); // הגדרת מיקום המצלמה יחסית לשחקן
+            cameraObject.transform.localPosition = new Vector3(1f, 1f, -6f); // הגדרת מיקום המצלמה יחסית לשחקן
             playerCamera.orthographic = true; // מצלמה אורתוגרפית
             playerCamera.orthographicSize = 2.7f; // גודל התצוגה האנכית של המצלמה
             playerCamera.clearFlags = CameraClearFlags.SolidColor; // צבע רקע של המצלמה
@@ -184,10 +199,30 @@ public class GameManager : Singleton<GameManager>
 
             // חלוקת מסך (Split-Screen)
             float width = 1f / numberOfPlayers; // מחשבים את החלק היחסי לכל שחקן במסך
-            playerCamera.rect = new Rect(i * width, 0, width, 1); // מגדירים את גבולות הצפייה של המצלמה
+            // Adjust the camera rect for player one and two
+            if (numberOfPlayers == 2)
+            {
+                // Set Player 1's camera rect to the right and Player 2's to the left
+                playerCamera.rect = new Rect((1 - width) - (i * width), 0, width, 1); // Invert the x position
+            }
+            else
+            {
+                playerCamera.rect = new Rect(i * width, 0, width, 1); // Default behavior for more players
+            }
         }
+        ResetPlayersMovement();
     }
     
+    private void ResetPlayersMovement()
+    {
+        foreach (var player in players)
+        {
+            if (player != null)
+            {
+                player.SetCanMove(true); 
+            }
+        }
+    }
     public void OnMarioImageClick()
     {
         // Play Mario selection sound
@@ -227,11 +262,9 @@ public class GameManager : Singleton<GameManager>
         cameraFollow.LeftBound = GameObject.Find("Left Bounds").transform;
         cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
         cameraFollow.PlayerTransform = playerTransform;
-        cameraFollow.CalculateBounds();
+        cameraFollow.CalculateBounds(numberOfPlayers);
     }
-
-
-
+    
     private void CreateGroundFromPrefab()
     {
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
@@ -258,6 +291,7 @@ public class GameManager : Singleton<GameManager>
             {
                 StopMusic();
                 PlayLoseSound();
+                TotalGameScore = 0;
                 timeUpUI.SetActive(true);
                 foreach (var player in players)
                 {
@@ -288,6 +322,7 @@ public class GameManager : Singleton<GameManager>
     public void ExitGame()
     {
         ScoreManager.Instance.DeleteHighScores();
+        TotalGameScore = 0;
         isFirstGame = true;
         
         #if UNITY_EDITOR
@@ -318,7 +353,7 @@ public class GameManager : Singleton<GameManager>
         StopMusic();
         PlayLoseSound();
         ScoreManager.Instance.SaveHighScores();
-
+        TotalGameScore = 0;
         Time.timeScale = 0f;
 
         if (gameOverUI != null)
@@ -333,21 +368,68 @@ public class GameManager : Singleton<GameManager>
         StopMusic();
         PlayWinSound();
         
+        elapsedTime = 120f; // Resetting elapsedTime to 120 seconds
+
         // Use elapsed time to calculate time taken to win
         float timeTakenToWin = elapsedTime; 
-        int finalScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
-
-        ScoreManager.Instance.AddHighScore(finalScore); 
-        _finalScore.text = finalScore.ToString(); 
-        ScoreManager.Instance.SaveHighScores();
+        int levelScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
         
+        _levelScore.text = levelScore.ToString();
+        TotalGameScore += levelScore;
+        
+        ScoreManager.Instance.AddHighScore(TotalGameScore); 
+        ScoreManager.Instance.SaveHighScores(); //to save score only if won level
         Time.timeScale = 0f; 
-
-        if (winScreenUI != null)
+       
+        // Check if there are more levels available
+        if (LevelManager.Instance.CurrentLevelIndex < LevelManager.Instance.levelBackgrounds.Length - 1)
         {
-            winScreenUI.SetActive(true); 
+            if(levelUpUI != null)
+            {
+                levelUpUI.SetActive(true);
+            }
+            
+            Time.timeScale = 1f; // Reset the time scale to allow the coroutine to run
+            StartCoroutine(LoadNextLevelAfterDelay(3f)); // Call coroutine with a short delay
+            PlayMusic();
+        }
+        else
+        {
+            _finalScore.text = TotalGameScore.ToString(); 
+            if (winScreenUI != null)
+            {
+                winScreenUI.SetActive(true); 
+            } 
         }
     }
+
+    private void PlayMusic()
+    {
+        if (musicManager != null)
+        {
+            musicManager.PlayMusic();
+        }
+    }
+
+    private IEnumerator LoadNextLevelAfterDelay(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        
+        playerHasWon = false;
+        
+        // Remove the win screen UI
+        if (levelUpUI != null)
+        {
+            levelUpUI.SetActive(false);
+        }
+
+        // Load the next level    
+        LevelManager.Instance.LoadNextLevel();
+        // Reset players' positions
+        SetUpPlayers();
+    }
+    
 
     private int CalculateHighScore(int score, float timeTaken)
     {
@@ -378,7 +460,8 @@ public class GameManager : Singleton<GameManager>
         {
             winScreenUI.SetActive(false);
         }
-        
+
+        TotalGameScore = 0;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

@@ -43,6 +43,19 @@ public class PlayerController : MonoBehaviour
     // Animation settings
     private Animator _animator;
     
+    private bool canMove = true; // Flag to control player movement
+
+    // Method to set canMove flag
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
+        
+        if (!canMove)
+        {
+            _rb.velocity = Vector2.zero; // Stop any current movement
+            _rb.constraints = RigidbodyConstraints2D.FreezePosition; // Freeze the player in place
+        }
+    }
     public void SetJumpForceMultiplier(float multiplier, float duration = 5f)
     {
         if (jumpForceCoroutine != null)
@@ -109,16 +122,31 @@ public class PlayerController : MonoBehaviour
             _rb = gameObject.AddComponent<Rigidbody2D>();
         }
         _animator = gameObject.GetComponent<Animator>();
-
+        lastPosition = transform.position; // Initialize lastPosition
     }
-    
-    protected virtual void Update()
-    {}
 
-    protected void UpdatePlayer(int playerID)
+    protected virtual void Update()
     {
-        string horizontalAxis = "Player" + playerID + "_Horizontal";
-        string jumpButton = "Player" + playerID + "_Jump";
+    }
+
+    protected void UpdatePlayer(int playerID, int totalPlayers)
+    {
+        string horizontalAxis;
+        string jumpButton;
+
+        // Check if it's single player or multiplayer
+        if (totalPlayers == 1)
+        {
+            // Use default controls for single player
+            horizontalAxis = "Horizontal"; // Assuming default input axes
+            jumpButton = "Jump";           // Assuming default jump button
+        }
+        else
+        {
+            // Use player-specific controls for multiplayer
+            horizontalAxis = "Player" + playerID + "_Horizontal";
+            jumpButton = "Player" + playerID + "_Jump";
+        }
         
         moveInput = Input.GetAxisRaw(horizontalAxis);
         isGrounded = IsGrounded();
@@ -132,6 +160,23 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetBool("IsJumping", false);
         }
+        
+        float distanceX = transform.position.x - lastPosition.x;
+    
+        if (distanceX > 0) // Only add distance if moving forward
+        {
+            distanceTraveled += distanceX;
+            lastPosition = transform.position;
+        }
+
+        // Timer to update score every interval
+        timer += Time.deltaTime;
+
+        if (timer >= scoreUpdateInterval)
+        {
+            CalculateAndAddScore();
+            timer = 0f; // Reset timer
+        }
     }
     
     void Start()
@@ -141,8 +186,6 @@ public class PlayerController : MonoBehaviour
         audioSource.volume = 0.3f;
         lastPosition = transform.position;
     }
-
-    
 
     private void HandleWalkingAnimations()
     {
@@ -178,6 +221,13 @@ public class PlayerController : MonoBehaviour
     
     private void FixedUpdate()
     {
+        if (!canMove)
+        {
+            _rb.velocity = Vector2.zero;
+            _rb.constraints = RigidbodyConstraints2D.FreezePosition;
+            return;
+        } 
+        
         Move();
         
         if (jumpInput)
