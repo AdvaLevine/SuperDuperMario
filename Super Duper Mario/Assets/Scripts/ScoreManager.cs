@@ -78,12 +78,6 @@ public class ScoreManager : Singleton<ScoreManager>
         }
     }
     
-    public void ClearHighScores()
-    {
-        highScores.Clear();
-        UpdateHighScoreUI();
-    }
-    
     public void SaveHighScores()
     {
         string highScoresString = string.Join(",", highScores);

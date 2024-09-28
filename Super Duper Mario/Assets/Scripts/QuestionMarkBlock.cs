@@ -18,6 +18,7 @@ public class QuestionMarkBlock : MonoBehaviour
         HalfCoins
     }
 
+    [Header("Block Settings")]
     [SerializeField] private BlockEffect blockEffect;
 
     private bool _isHit = false;

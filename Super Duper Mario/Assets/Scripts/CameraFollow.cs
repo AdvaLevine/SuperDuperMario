@@ -26,7 +26,7 @@ public class CameraFollow : MonoBehaviour
         Camera myCamera = GetComponent<Camera>();
         _cameraHeight = 2f * myCamera.orthographicSize;
         
-        if(numberOfPlayers>1)
+        if(numberOfPlayers > 1)
         {
             _cameraWidth = _cameraHeight * (myCamera.aspect / 2f);
         }

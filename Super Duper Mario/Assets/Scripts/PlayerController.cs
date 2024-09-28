@@ -44,77 +44,10 @@ public class PlayerController : MonoBehaviour
     // Animation settings
     private Animator _animator;
     
-    private bool canMove = true; // Flag to control player movement
+    // Flag to control player movement
+    private bool canMove = true; 
 
-    // Method to set canMove flag
-    public void SetCanMove(bool value)
-    {
-        canMove = value;
-        
-        if (!canMove)
-        {
-            _rb.velocity = Vector2.zero; // Stop any current movement
-            _rb.constraints = RigidbodyConstraints2D.FreezePosition; // Freeze the player in place
-        }
-    }
-    public void SetJumpForceMultiplier(float multiplier, float duration = 5f)
-    {
-        if (jumpForceCoroutine != null)
-        {
-            StopCoroutine(jumpForceCoroutine);
-        }
-        jumpForceMultiplier = multiplier;
-        jumpForceCoroutine = StartCoroutine(ResetJumpForceMultiplierAfterTime(duration));
-    }
-
-    private IEnumerator ResetJumpForceMultiplierAfterTime(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        jumpForceMultiplier = 1f;
-    }
-
-    public void SetCoinMultiplier(float multiplier, float duration)
-    {
-        if (coinMultiplierCoroutine != null)
-        {
-            StopCoroutine(coinMultiplierCoroutine);
-        }
-        coinMultiplier = multiplier;
-        coinMultiplierCoroutine = StartCoroutine(ResetCoinMultiplierAfterTime(duration));
-    }
-
-    private IEnumerator ResetCoinMultiplierAfterTime(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        coinMultiplier = 1f;
-    }
-
-    public float GetCoinMultiplier()
-    {
-        return coinMultiplier;
-    }
-
-    private void Jump()
-    {
-        PlayJumpSound();
-        HandleJumpAnimations();
-        _rb.gravityScale = jumpGravityScale;
-        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
-    }
-    public void ToggleJumpMute()
-    {
-        isJumpMuted = !isJumpMuted;
-        EventSystem.current.SetSelectedGameObject(null);
-    }
-
-    void PlayJumpSound()
-    {
-        if (jumpSound != null && !isJumpMuted) 
-        {
-            audioSource.PlayOneShot(jumpSound);
-        }
-    }
-
+    
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -128,6 +61,63 @@ public class PlayerController : MonoBehaviour
 
     protected virtual void Update()
     {
+    }
+    
+    void Start()
+    {
+        _animator = GetComponent<Animator>();
+        audioSource = gameObject.AddComponent<AudioSource>(); 
+        audioSource.volume = 0.3f;
+        lastPosition = transform.position;
+    }
+    
+    private void FixedUpdate()
+    {
+        if (!canMove)
+        {
+            _rb.velocity = Vector2.zero;
+            _rb.constraints = RigidbodyConstraints2D.FreezePosition;
+            return;
+        } 
+        
+        Move();
+        
+        if (jumpInput)
+        {
+            Jump();
+            jumpInput = false;
+        }
+        
+        if (_rb.velocity.y <= 0) 
+        {
+            _rb.gravityScale = 1;
+        }
+    }
+    
+    private void Move()
+    {
+        _rb.velocity = new Vector2(moveInput * moveSpeed, _rb.velocity.y);
+        HandleWalkingAnimations();
+       
+        if (moveInput > 0 && !facingRight)
+            Flip();
+        else if (moveInput < 0 && facingRight)
+            Flip();
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+    private void Jump()
+    {
+        PlayJumpSound();
+        HandleJumpAnimations();
+        _rb.gravityScale = jumpGravityScale;
+        _rb.velocity = new Vector2(_rb.velocity.x, jumpForce * jumpForceMultiplier);
     }
 
     protected void UpdatePlayer(int playerID, int totalPlayers)
@@ -179,15 +169,70 @@ public class PlayerController : MonoBehaviour
             timer = 0f; // Reset timer
         }
     }
-    
-    void Start()
+
+    // Method to set canMove flag
+    public void SetCanMove(bool value)
     {
-        _animator = GetComponent<Animator>();
-        audioSource = gameObject.AddComponent<AudioSource>(); 
-        audioSource.volume = 0.3f;
-        lastPosition = transform.position;
+        canMove = value;
+        
+        if (!canMove)
+        {
+            _rb.velocity = Vector2.zero; // Stop any current movement
+            _rb.constraints = RigidbodyConstraints2D.FreezePosition; // Freeze the player in place
+        }
+    }
+    
+    public void SetJumpForceMultiplier(float multiplier, float duration = 5f)
+    {
+        if (jumpForceCoroutine != null)
+        {
+            StopCoroutine(jumpForceCoroutine);
+        }
+        jumpForceMultiplier = multiplier;
+        jumpForceCoroutine = StartCoroutine(ResetJumpForceMultiplierAfterTime(duration));
     }
 
+    private IEnumerator ResetJumpForceMultiplierAfterTime(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        jumpForceMultiplier = 1f;
+    }
+
+    public void SetCoinMultiplier(float multiplier, float duration)
+    {
+        if (coinMultiplierCoroutine != null)
+        {
+            StopCoroutine(coinMultiplierCoroutine);
+        }
+        coinMultiplier = multiplier;
+        coinMultiplierCoroutine = StartCoroutine(ResetCoinMultiplierAfterTime(duration));
+    }
+
+    private IEnumerator ResetCoinMultiplierAfterTime(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        coinMultiplier = 1f;
+    }
+
+    public float GetCoinMultiplier()
+    {
+        return coinMultiplier;
+    }
+    
+    public void ToggleJumpMute()
+    {
+        isJumpMuted = !isJumpMuted;
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    void PlayJumpSound()
+    {
+        if (jumpSound != null && !isJumpMuted) 
+        {
+            audioSource.PlayOneShot(jumpSound);
+        }
+    }
+    
     private void HandleWalkingAnimations()
     {
         if (moveInput != 0)
@@ -220,48 +265,6 @@ public class PlayerController : MonoBehaviour
 
     }
     
-    private void FixedUpdate()
-    {
-        if (!canMove)
-        {
-            _rb.velocity = Vector2.zero;
-            _rb.constraints = RigidbodyConstraints2D.FreezePosition;
-            return;
-        } 
-        
-        Move();
-        
-        if (jumpInput)
-        {
-            Jump();
-            jumpInput = false;
-        }
-        
-        if (_rb.velocity.y <= 0) 
-        {
-            _rb.gravityScale = 1;
-        }
-    }
-    
-    private void Move()
-    {
-        _rb.velocity = new Vector2(moveInput * moveSpeed, _rb.velocity.y);
-        HandleWalkingAnimations();
-       
-        if (moveInput > 0 && !facingRight)
-            Flip();
-        else if (moveInput < 0 && facingRight)
-            Flip();
-    }
-
-    private void Flip()
-    {
-        facingRight = !facingRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-    }
-    
     private bool IsGrounded()
     {
         float rayLength = 0.2f;
@@ -287,5 +290,4 @@ public class PlayerController : MonoBehaviour
         enabled = false;
         GameManager.Instance.GameOver();
     }
-    
 }

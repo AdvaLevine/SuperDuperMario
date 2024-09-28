@@ -63,6 +63,13 @@ public class Monster : MonoBehaviour
         }
     }
     
+    private void Flip()
+    {
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+    
     private void Die()
     {
         _animator.SetTrigger("Die");
@@ -74,11 +81,5 @@ public class Monster : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         Destroy(gameObject);
     }
-
-    private void Flip()
-    {
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
-    }
+    
 }

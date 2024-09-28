@@ -10,11 +10,6 @@ public class LevelManager : Singleton<LevelManager>
     
     public int CurrentLevelIndex => currentLevelIndex; // Add this line to expose the current level index
     
-    public GameObject GetCurrentBackgroundPrefab()
-    {
-        return levelBackgrounds[currentLevelIndex];
-    }
-    
     public void LoadNextLevel()
     {
         currentLevelIndex++;
@@ -23,11 +18,6 @@ public class LevelManager : Singleton<LevelManager>
         if (currentLevelIndex < levelBackgrounds.Length)
         {
             LoadLevel(currentLevelIndex);
-        }
-        else
-        {
-            // Optionally handle when there are no more levels
-            //Debug.Log("No more levels!");
         }
     }
 

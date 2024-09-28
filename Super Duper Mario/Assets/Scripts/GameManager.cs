@@ -25,20 +25,16 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject instructionsUI;
     [SerializeField] private GameObject popUpUI;
     [SerializeField] private GameObject twoPlayersPopUpUI;
-    
+    private Text popUpText;
+
     [Header("Time Settings")]
-    [SerializeField] private Text _timer; 
+    [SerializeField] private Text _timer;
+    [SerializeField] private float levelTime = 120f; 
     private float elapsedTime = 0f;
     public GameObject timerText;
-    [SerializeField] private float levelTime = 120f; 
     
     [Header("Difficulty Settings")]
-    [SerializeField] private Button easyButton; 
-    
-    // Game state variables
-    private bool playerHasWon = false;
-    private bool isFirstGame = true;
-    private bool isGamePaused = false;
+    [SerializeField] private Button easyButton;
 
     [Header("Final Score Settings")]
     [SerializeField] private Text _finalScore;
@@ -53,15 +49,19 @@ public class GameManager : Singleton<GameManager>
     private AudioSource audioSource;
     private MusicManager musicManager;
     
+    // Game variables
+    private bool playerHasWon = false;
+    private bool isFirstGame = true;
+    private bool isGamePaused = false;
     private int numberOfPlayers = 1; //deafault 1 player
     private List<PlayerController> players = new List<PlayerController>(); // list of players in the game
-    
+
+    // properties
     public List<PlayerController> Players => players;
     public int CharacterSelectionIndex { get; set; } = 0;
     public int NumberOfPlayers => numberOfPlayers;
-
-    private Text popUpText;
-
+    
+    // Enum for difficulty
     public enum Difficulty
     {
         Easy,
@@ -74,6 +74,7 @@ public class GameManager : Singleton<GameManager>
     {
         return playerHasWon;
     }
+    
     private void Awake()
     {
         ShowMainMenu();
@@ -84,27 +85,6 @@ public class GameManager : Singleton<GameManager>
     {
         audioSource = gameObject.AddComponent<AudioSource>(); 
         audioSource.volume = 0.3f;
-    }
-
-    private void CreateDivider()
-    {
-        // יצירת Canvas
-        GameObject canvasObject = new GameObject("DividerCanvas");
-        Canvas canvas = canvasObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        
-        // הוספת Image שישמש כפס
-        GameObject divider = new GameObject("Divider");
-        divider.transform.SetParent(canvas.transform);
-
-        // הגדרת RectTransform של הפס (Image)
-        RectTransform rectTransform = divider.AddComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(5, Screen.height); // פס בגודל 5 פיקסלים לגובה המסך
-        rectTransform.anchoredPosition = new Vector2(0, 0); // מיקום הפס במרכז המסך
-
-        // הוספת רכיב Image ושינוי צבעו
-        Image image = divider.AddComponent<Image>();
-        image.color = Color.black; // ניתן להחליף לצבע אחר
     }
 
     private void Update()
@@ -141,18 +121,44 @@ public class GameManager : Singleton<GameManager>
         
         if (numberOfPlayers == 2)
         {
-            CreateDivider();
-            ShowTwoPlayersPopUp();
+            CreateDivider(); // Create a divider for split-screen
+            ShowTwoPlayersPopUp(); // Show a pop-up message for two players
         }
 
+        // Set up the players
         SetUpPlayers();
         SetUpAudioInGame();
+        
+        // Remove the main camera
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
         {
             mainCamera.gameObject.SetActive(false);
         }
     }
+    
+    // Create a divider for split-screen
+    private void CreateDivider()
+    {
+        // add a canvas to the scene
+        GameObject canvasObject = new GameObject("DividerCanvas");
+        Canvas canvas = canvasObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        
+        // adding image to be as a line divider
+        GameObject divider = new GameObject("Divider");
+        divider.transform.SetParent(canvas.transform);
+        
+        // define the RectTransform component for the line divider
+        RectTransform rectTransform = divider.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(5, Screen.height); // 5 pixels width and full height
+        rectTransform.anchoredPosition = new Vector2(0, 0); // center of the screen
+
+        // adding image component to the divider and set the color
+        Image image = divider.AddComponent<Image>();
+        image.color = Color.black; 
+    }
+    
     private void LoadLevelWithBackground()
     {
         // Load the next level
@@ -163,13 +169,13 @@ public class GameManager : Singleton<GameManager>
     {
         players.Clear();
         
-        // Remove any existing AudioListeners before setting up new players
-        
-        AudioListener existingAudioListener = FindObjectOfType<AudioListener>();
+       // Remove any existing AudioListeners before setting up new players
+       AudioListener existingAudioListener = FindObjectOfType<AudioListener>();
        if (existingAudioListener != null)
        {
         Destroy(existingAudioListener.gameObject);
        }
+       
        // Remove any existing cameras in the scene
        Camera[] existingCameras = FindObjectsOfType<Camera>();
        foreach (Camera cam in existingCameras)
@@ -202,16 +208,16 @@ public class GameManager : Singleton<GameManager>
                 cameraObject.AddComponent<AudioListener>();
             }
             //connect the camera to the player
-            cameraObject.transform.SetParent(playerObject.transform); // המצלמה תהיה Child של השחקן
-            cameraObject.transform.localPosition = new Vector3(1f, 1f, -6f); // הגדרת מיקום המצלמה יחסית לשחקן
-            playerCamera.orthographic = true; // מצלמה אורתוגרפית
-            playerCamera.orthographicSize = 2.7f; // גודל התצוגה האנכית של המצלמה
-            playerCamera.clearFlags = CameraClearFlags.SolidColor; // צבע רקע של המצלמה
+            cameraObject.transform.SetParent(playerObject.transform); // the camera is a child of the player
+            cameraObject.transform.localPosition = new Vector3(1f, 1f, -6f); // setting the camera position
+            playerCamera.orthographic = true; 
+            playerCamera.orthographicSize = 2.7f; // the size of the camera
+            playerCamera.clearFlags = CameraClearFlags.SolidColor; // camera background color
             
             CalculateBoundsForCamera(playerCamera, playerObject.transform);
 
             // (Split-Screen)
-            float width = 1f / numberOfPlayers; // מחשבים את החלק היחסי לכל שחקן במסך
+            float width = 1f / numberOfPlayers; // the partial width of the camera for each player
             // Adjust the camera rect for player one and two
             if (numberOfPlayers == 2)
             {
@@ -236,6 +242,7 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
+    
     public void OnMarioImageClick()
     {
         // Play Mario selection sound
@@ -244,7 +251,6 @@ public class GameManager : Singleton<GameManager>
             audioSource.PlayOneShot(marioSelectSound);
         }
         CharacterSelectionIndex = 0;
-        Debug.Log("Mario selected");
     }
     
     public void OnShrekImageClick()
@@ -254,10 +260,8 @@ public class GameManager : Singleton<GameManager>
             audioSource.PlayOneShot(shrekSelectSound);
         }
         CharacterSelectionIndex = 1;
-        Debug.Log("Shrek selected");
     }
-
-
+    
     private void SetUpAudioInGame()
     {
         audioSource = GetComponent<AudioSource>();
@@ -490,7 +494,6 @@ public class GameManager : Singleton<GameManager>
         SetUpPlayers();
     }
     
-
     private int CalculateHighScore(int score, float timeTaken)
     {
         // Calculate the time remaining
@@ -521,6 +524,7 @@ public class GameManager : Singleton<GameManager>
             winScreenUI.SetActive(false);
         }
         
+        ScoreManager.Instance.SaveHighScores();
         TotalGameScore = 0;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -546,7 +550,6 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 0f;  
         pauseMenuUI.SetActive(true);  
         ScoreManager.Instance.SaveHighScores();
-
     }
 
     private void ResumeGame()
