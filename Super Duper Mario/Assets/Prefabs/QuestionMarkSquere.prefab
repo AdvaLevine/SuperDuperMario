@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpHeight: 0.2
   jumpDuration: 0.1
+  popUpUI: {fileID: 0}
+  popUpText: {fileID: 0}
   blockEffect: 0
 --- !u!61 &-8688819483121935688
 BoxCollider2D:

@@ -22,6 +22,8 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject timeUpUI;
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject levelUpUI;
+    [SerializeField] private GameObject instructionsUI;
+    [SerializeField] private GameObject popUpUI;
     
     
     [Header("Time Settings")]
@@ -57,6 +59,8 @@ public class GameManager : Singleton<GameManager>
     public List<PlayerController> Players => players;
     public int CharacterSelectionIndex { get; set; } = 0;
     public int NumberOfPlayers => numberOfPlayers;
+
+    private Text popUpText;
 
     public enum Difficulty
     {
@@ -166,7 +170,13 @@ public class GameManager : Singleton<GameManager>
        {
         Destroy(existingAudioListener.gameObject);
        }
-        
+       // Remove any existing cameras in the scene
+       Camera[] existingCameras = FindObjectsOfType<Camera>();
+       foreach (Camera cam in existingCameras)
+       {
+           Destroy(cam.gameObject); // Destroy the camera game object
+       }
+       
         for (int i = 0; i < numberOfPlayers; i++)
         {
             Vector3 spawnPosition = new Vector3(-15f + i * 0.5f, 0f, 0f); // מיקום התחלתי לכל שחקן
@@ -197,7 +207,7 @@ public class GameManager : Singleton<GameManager>
             
             CalculateBoundsForCamera(playerCamera, playerObject.transform);
 
-            // חלוקת מסך (Split-Screen)
+            // (Split-Screen)
             float width = 1f / numberOfPlayers; // מחשבים את החלק היחסי לכל שחקן במסך
             // Adjust the camera rect for player one and two
             if (numberOfPlayers == 2)
@@ -348,6 +358,42 @@ public class GameManager : Singleton<GameManager>
         highScoreUI.SetActive(false);
     }
     
+    public void ShowInstructions()
+    {
+        instructionsUI.SetActive(true);
+    }
+    
+    public void CloseInstructions()
+    {
+        instructionsUI.SetActive(false);
+    }
+    
+    public void ShowPopUpMessage(string message)
+    {
+        popUpText = popUpUI.GetComponentInChildren<Text>();
+
+        if (popUpUI != null && popUpText != null)
+        {
+            popUpText.text = message;  // Set the message
+            popUpUI.SetActive(true);   // Show the pop-up
+
+            // Optionally hide the pop-up after a few seconds
+            Invoke("HidePopUp", 2f);   // Adjust the duration as needed
+        }
+        else
+        {
+            Debug.LogError("PopUpUI or popUpText is not set up correctly.");
+        }
+    }
+
+    private void HidePopUp()
+    {
+        if (popUpUI != null)
+        {
+            popUpUI.SetActive(false);  // Hide the pop-up after displaying
+        }
+    }
+
     public void GameOver()
     {
         StopMusic();
@@ -368,8 +414,7 @@ public class GameManager : Singleton<GameManager>
         StopMusic();
         PlayWinSound();
         
-        elapsedTime = 120f; // Resetting elapsedTime to 120 seconds
-
+        elapsedTime = 0f; // Resetting elapsedTime 
         // Use elapsed time to calculate time taken to win
         float timeTakenToWin = elapsedTime; 
         int levelScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
@@ -380,7 +425,7 @@ public class GameManager : Singleton<GameManager>
         ScoreManager.Instance.AddHighScore(TotalGameScore); 
         ScoreManager.Instance.SaveHighScores(); //to save score only if won level
         Time.timeScale = 0f; 
-       
+
         // Check if there are more levels available
         if (LevelManager.Instance.CurrentLevelIndex < LevelManager.Instance.levelBackgrounds.Length - 1)
         {
@@ -388,7 +433,7 @@ public class GameManager : Singleton<GameManager>
             {
                 levelUpUI.SetActive(true);
             }
-            
+            ScoreManager.Instance.ResetScore(); // Reset score to 0 before the next level starts
             Time.timeScale = 1f; // Reset the time scale to allow the coroutine to run
             StartCoroutine(LoadNextLevelAfterDelay(3f)); // Call coroutine with a short delay
             PlayMusic();
@@ -400,6 +445,7 @@ public class GameManager : Singleton<GameManager>
             {
                 winScreenUI.SetActive(true); 
             } 
+            ScoreManager.Instance.ResetScore(); // Reset score to 0 before the next level starts
         }
     }
 
@@ -460,7 +506,7 @@ public class GameManager : Singleton<GameManager>
         {
             winScreenUI.SetActive(false);
         }
-
+        
         TotalGameScore = 0;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -517,7 +563,6 @@ public class GameManager : Singleton<GameManager>
         {
             audioSource.PlayOneShot(winSound); 
         }
-
     }
 
     private void PlayLoseSound()
