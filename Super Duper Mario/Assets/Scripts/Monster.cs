@@ -72,6 +72,7 @@ public class Monster : MonoBehaviour
         {
             // Prevent flipping direction if two monsters (of any type) collide with each other
             return;
+        }
     }
     
     private void Flip()
