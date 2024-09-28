@@ -14,6 +14,7 @@ TagManager:
   - Coin
   - MonsterHard
   - Flower Monster
+  - MonsterMedium
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Water
   - UI
   - Flower Monsters
-  - 
+  - Player
   - 
   - 
   - 

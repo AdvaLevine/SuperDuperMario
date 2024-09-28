@@ -201,5 +201,3 @@ MonoBehaviour:
   jumpGravityScale: 0.5
   pointMultiplier: 20
   jumpSound: {fileID: 8300000, guid: fc061fe1795ab154896bdd67678b7732, type: 3}
-  marioSelectSound: {fileID: 8300000, guid: f29523fe11fb77347a5db3048a5192e5, type: 3}
-  shrekSelectSound: {fileID: 0}

@@ -1,7 +1,6 @@
 
-using System;
+using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -11,7 +10,6 @@ public class GameManager : Singleton<GameManager>
 {
     [Header("Prefabs")]
     [SerializeField] private GameObject _groundPrefab;
-    [SerializeField] private GameObject _BackgroundPrefab;
     [SerializeField] private GameObject _monsterPrefab;
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject[] _playerPrefabs; 
@@ -23,42 +21,51 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject winScreenUI;
     [SerializeField] private GameObject timeUpUI;
     [SerializeField] private GameObject pauseMenuUI;
-    
+    [SerializeField] private GameObject levelUpUI;
+    [SerializeField] private GameObject instructionsUI;
+    [SerializeField] private GameObject popUpUI;
+    [SerializeField] private GameObject twoPlayersPopUpUI;
+    private Text popUpText;
+
     [Header("Time Settings")]
-    [SerializeField] private Text _timer; 
+    [SerializeField] private Text _timer;
+    [SerializeField] private float levelTime = 120f; 
     private float elapsedTime = 0f;
     public GameObject timerText;
-    [SerializeField] private float levelTime = 120f; 
     
     [Header("Difficulty Settings")]
-    [SerializeField] private Button easyButton; 
-    
-    // Game state variables
-    private bool playerHasWon = false;
-    private bool isFirstGame = true;
-    private bool isGamePaused = false;
+    [SerializeField] private Button easyButton;
 
     [Header("Final Score Settings")]
-    [SerializeField] private Text _finalScore; 
+    [SerializeField] private Text _finalScore;
+    [SerializeField] private Text _levelScore;
+    private int TotalGameScore = 0;
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip winSound; // The win sound clip
     [SerializeField] private AudioClip loseSound; // The lose sound clip
-    
-    private AudioSource audioSource;
-    private MusicManager musicManager;
     [SerializeField] private AudioClip marioSelectSound; 
     [SerializeField] private  AudioClip shrekSelectSound; 
+    private AudioSource audioSource;
+    private MusicManager musicManager;
     
-    private int numberOfPlayers = 1; // ברירת מחדל - שחקן אחד
-    private List<PlayerController> players = new List<PlayerController>(); // רשימה של בקרי השחקנים
+    // Game variables
+    private bool playerHasWon = false;
+    private bool isFirstGame = true;
+    private bool isGamePaused = false;
+    private int numberOfPlayers = 1; //deafault 1 player
+    private List<PlayerController> players = new List<PlayerController>(); // list of players in the game
+
+    // properties
+    public List<PlayerController> Players => players;
     public int CharacterSelectionIndex { get; set; } = 0;
-
-
-
+    public int NumberOfPlayers => numberOfPlayers;
+    
+    // Enum for difficulty
     public enum Difficulty
     {
         Easy,
+        Medium,
         Hard
     }
 
@@ -68,6 +75,7 @@ public class GameManager : Singleton<GameManager>
     {
         return playerHasWon;
     }
+    
     private void Awake()
     {
         ShowMainMenu();
@@ -78,27 +86,6 @@ public class GameManager : Singleton<GameManager>
     {
         audioSource = gameObject.AddComponent<AudioSource>(); 
         audioSource.volume = 0.3f;
-    }
-
-    private void CreateDivider()
-    {
-        // יצירת Canvas
-        GameObject canvasObject = new GameObject("DividerCanvas");
-        Canvas canvas = canvasObject.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        
-        // הוספת Image שישמש כפס
-        GameObject divider = new GameObject("Divider");
-        divider.transform.SetParent(canvas.transform);
-
-        // הגדרת RectTransform של הפס (Image)
-        RectTransform rectTransform = divider.AddComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(5, Screen.height); // פס בגודל 5 פיקסלים לגובה המסך
-        rectTransform.anchoredPosition = new Vector2(0, 0); // מיקום הפס במרכז המסך
-
-        // הוספת רכיב Image ושינוי צבעו
-        Image image = divider.AddComponent<Image>();
-        image.color = Color.black; // ניתן להחליף לצבע אחר
     }
 
     private void Update()
@@ -129,17 +116,21 @@ public class GameManager : Singleton<GameManager>
         ScoreManager.Instance.ScoreText.SetActive(true);
         ScoreManager.Instance.ResetScore();
       
-        Instantiate(_BackgroundPrefab, new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
+        // Start the level and instantiate the background
+        LoadLevelWithBackground();
         CreateGroundFromPrefab();
         
         if (numberOfPlayers == 2)
         {
-            CreateDivider();
+            CreateDivider(); // Create a divider for split-screen
+            ShowTwoPlayersPopUp(); // Show a pop-up message for two players
         }
 
+        // Set up the players
         SetUpPlayers();
-        
         SetUpAudioInGame();
+        
+        // Remove the main camera
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
         {
@@ -147,10 +138,52 @@ public class GameManager : Singleton<GameManager>
         }
     }
     
+    // Create a divider for split-screen
+    private void CreateDivider()
+    {
+        // add a canvas to the scene
+        GameObject canvasObject = new GameObject("DividerCanvas");
+        Canvas canvas = canvasObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        
+        // adding image to be as a line divider
+        GameObject divider = new GameObject("Divider");
+        divider.transform.SetParent(canvas.transform);
+        
+        // define the RectTransform component for the line divider
+        RectTransform rectTransform = divider.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(5, Screen.height); // 5 pixels width and full height
+        rectTransform.anchoredPosition = new Vector2(0, 0); // center of the screen
+
+        // adding image component to the divider and set the color
+        Image image = divider.AddComponent<Image>();
+        image.color = Color.black; 
+    }
+    
+    private void LoadLevelWithBackground()
+    {
+        // Load the next level
+        LevelManager.Instance.LoadLevel(LevelManager.Instance.CurrentLevelIndex);
+    }
+    
     private void SetUpPlayers()
     {
         players.Clear();
         
+       // Remove any existing AudioListeners before setting up new players
+       AudioListener existingAudioListener = FindObjectOfType<AudioListener>();
+       if (existingAudioListener != null)
+       {
+        Destroy(existingAudioListener.gameObject);
+       }
+       
+       // Remove any existing cameras in the scene
+       Camera[] existingCameras = FindObjectsOfType<Camera>();
+       foreach (Camera cam in existingCameras)
+       {
+           Destroy(cam.gameObject); // Destroy the camera game object
+       }
+       
         for (int i = 0; i < numberOfPlayers; i++)
         {
             Vector3 spawnPosition = new Vector3(-15f + i * 0.5f, 0f, 0f); // מיקום התחלתי לכל שחקן
@@ -161,10 +194,13 @@ public class GameManager : Singleton<GameManager>
             else
                 playerObject = Instantiate(_playerPrefabs[i], spawnPosition, Quaternion.identity);
             
+            // Set the layer for the player object
+            playerObject.layer = LayerMask.NameToLayer("Player");
+            
             PlayerController playerController = playerObject.GetComponent<PlayerController>();
             players.Add(playerController);
-
-            // יצירת מצלמה לכל שחקן
+            
+            //create cameras for each player
             GameObject cameraObject = new GameObject("PlayerCamera" + (i + 1));
             Camera playerCamera = cameraObject.AddComponent<Camera>();
             
@@ -172,19 +208,39 @@ public class GameManager : Singleton<GameManager>
             {
                 cameraObject.AddComponent<AudioListener>();
             }
-
-            // חיבור המצלמה לשחקן
-            cameraObject.transform.SetParent(playerObject.transform); // המצלמה תהיה Child של השחקן
-            cameraObject.transform.localPosition = new Vector3(1, 1, -6); // הגדרת מיקום המצלמה יחסית לשחקן
-            playerCamera.orthographic = true; // מצלמה אורתוגרפית
-            playerCamera.orthographicSize = 2.7f; // גודל התצוגה האנכית של המצלמה
-            playerCamera.clearFlags = CameraClearFlags.SolidColor; // צבע רקע של המצלמה
+            //connect the camera to the player
+            cameraObject.transform.SetParent(playerObject.transform); // the camera is a child of the player
+            cameraObject.transform.localPosition = new Vector3(1f, 1f, -6f); // setting the camera position
+            playerCamera.orthographic = true; 
+            playerCamera.orthographicSize = 2.7f; // the size of the camera
+            playerCamera.clearFlags = CameraClearFlags.SolidColor; // camera background color
             
             CalculateBoundsForCamera(playerCamera, playerObject.transform);
 
-            // חלוקת מסך (Split-Screen)
-            float width = 1f / numberOfPlayers; // מחשבים את החלק היחסי לכל שחקן במסך
-            playerCamera.rect = new Rect(i * width, 0, width, 1); // מגדירים את גבולות הצפייה של המצלמה
+            // (Split-Screen)
+            float width = 1f / numberOfPlayers; // the partial width of the camera for each player
+            // Adjust the camera rect for player one and two
+            if (numberOfPlayers == 2)
+            {
+                // Set Player 1's camera rect to the right and Player 2's to the left
+                playerCamera.rect = new Rect((1 - width) - (i * width), 0, width, 1); // Invert the x position
+            }
+            else
+            {
+                playerCamera.rect = new Rect(i * width, 0, width, 1); // Default behavior for more players
+            }
+        }
+        ResetPlayersMovement();
+    }
+    
+    private void ResetPlayersMovement()
+    {
+        foreach (var player in players)
+        {
+            if (player != null)
+            {
+                player.SetCanMove(true); 
+            }
         }
     }
     
@@ -196,7 +252,6 @@ public class GameManager : Singleton<GameManager>
             audioSource.PlayOneShot(marioSelectSound);
         }
         CharacterSelectionIndex = 0;
-        Debug.Log("Mario selected");
     }
     
     public void OnShrekImageClick()
@@ -206,10 +261,8 @@ public class GameManager : Singleton<GameManager>
             audioSource.PlayOneShot(shrekSelectSound);
         }
         CharacterSelectionIndex = 1;
-        Debug.Log("Shrek selected");
     }
-
-
+    
     private void SetUpAudioInGame()
     {
         audioSource = GetComponent<AudioSource>();
@@ -227,11 +280,9 @@ public class GameManager : Singleton<GameManager>
         cameraFollow.LeftBound = GameObject.Find("Left Bounds").transform;
         cameraFollow.RightBound = GameObject.Find("Right Bounds").transform;
         cameraFollow.PlayerTransform = playerTransform;
-        cameraFollow.CalculateBounds();
+        cameraFollow.CalculateBounds(numberOfPlayers);
     }
-
-
-
+    
     private void CreateGroundFromPrefab()
     {
         GameObject ground = Instantiate(_groundPrefab, new Vector3(0, -4.7f, 0), Quaternion.identity);
@@ -258,6 +309,7 @@ public class GameManager : Singleton<GameManager>
             {
                 StopMusic();
                 PlayLoseSound();
+                TotalGameScore = 0;
                 timeUpUI.SetActive(true);
                 foreach (var player in players)
                 {
@@ -288,6 +340,7 @@ public class GameManager : Singleton<GameManager>
     public void ExitGame()
     {
         ScoreManager.Instance.DeleteHighScores();
+        TotalGameScore = 0;
         isFirstGame = true;
         
         #if UNITY_EDITOR
@@ -300,6 +353,19 @@ public class GameManager : Singleton<GameManager>
     public void SetDifficulty(int difficulty)
     {
         CurrentDifficulty = (Difficulty)difficulty;
+        
+        switch (CurrentDifficulty)
+        {
+            case Difficulty.Easy:
+                levelTime = 120f; // 2 minutes for easy
+                break;
+            case Difficulty.Medium:
+                levelTime = 90f; // 1.5 minutes for medium
+                break;
+            case Difficulty.Hard:
+                levelTime = 60f; // 1 minute for hard
+                break;
+        }
     }
 
     public void ShowHighScore()
@@ -313,12 +379,59 @@ public class GameManager : Singleton<GameManager>
         highScoreUI.SetActive(false);
     }
     
+    public void ShowInstructions()
+    {
+        instructionsUI.SetActive(true);
+    }
+    
+    public void CloseInstructions()
+    {
+        instructionsUI.SetActive(false);
+    }
+    
+    public void ShowTwoPlayersPopUp()
+    {
+        if (twoPlayersPopUpUI != null)
+        {
+            twoPlayersPopUpUI.SetActive(true);
+            Invoke("HideTwoPlayersPopUp", 3f);
+        }
+    }
+    public void HideTwoPlayersPopUp()
+    {
+        if (twoPlayersPopUpUI != null)
+        {
+            twoPlayersPopUpUI.SetActive(false);
+        }
+    }
+    public void ShowPopUpMessage(string message)
+    {
+        popUpText = popUpUI.GetComponentInChildren<Text>();
+
+        if (popUpUI != null && popUpText != null)
+        {
+            popUpText.text = message;  // Set the message
+            popUpUI.SetActive(true);   // Show the pop-up
+
+            // Optionally hide the pop-up after a few seconds
+            Invoke("HidePopUp", 2f);   // Adjust the duration as needed
+        }
+    }
+
+    private void HidePopUp()
+    {
+        if (popUpUI != null)
+        {
+            popUpUI.SetActive(false);  // Hide the pop-up after displaying
+        }
+    }
+
     public void GameOver()
     {
         StopMusic();
         PlayLoseSound();
         ScoreManager.Instance.SaveHighScores();
-
+        TotalGameScore = 0;
         Time.timeScale = 0f;
 
         if (gameOverUI != null)
@@ -333,22 +446,68 @@ public class GameManager : Singleton<GameManager>
         StopMusic();
         PlayWinSound();
         
+        elapsedTime = 0f; // Resetting elapsedTime 
         // Use elapsed time to calculate time taken to win
         float timeTakenToWin = elapsedTime; 
-        int finalScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
-
-        ScoreManager.Instance.AddHighScore(finalScore); 
-        _finalScore.text = finalScore.ToString(); 
-        ScoreManager.Instance.SaveHighScores();
+        int levelScore = CalculateHighScore(ScoreManager.Instance.Score, timeTakenToWin);
         
+        _levelScore.text = levelScore.ToString();
+        TotalGameScore += levelScore;
+        
+        ScoreManager.Instance.AddHighScore(TotalGameScore); 
+        ScoreManager.Instance.SaveHighScores(); //to save score only if won level
         Time.timeScale = 0f; 
 
-        if (winScreenUI != null)
+        // Check if there are more levels available
+        if (LevelManager.Instance.CurrentLevelIndex < LevelManager.Instance.levelBackgrounds.Length - 1)
         {
-            winScreenUI.SetActive(true); 
+            if(levelUpUI != null)
+            {
+                levelUpUI.SetActive(true);
+            }
+            ScoreManager.Instance.ResetScore(); // Reset score to 0 before the next level starts
+            Time.timeScale = 1f; // Reset the time scale to allow the coroutine to run
+            StartCoroutine(LoadNextLevelAfterDelay(3f)); // Call coroutine with a short delay
+            PlayMusic();
+        }
+        else
+        {
+            _finalScore.text = TotalGameScore.ToString(); 
+            if (winScreenUI != null)
+            {
+                winScreenUI.SetActive(true); 
+            } 
+            ScoreManager.Instance.ResetScore(); // Reset score to 0 before the next level starts
         }
     }
 
+    private void PlayMusic()
+    {
+        if (musicManager != null)
+        {
+            musicManager.PlayMusic();
+        }
+    }
+
+    private IEnumerator LoadNextLevelAfterDelay(float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        
+        playerHasWon = false;
+        
+        // Remove the win screen UI
+        if (levelUpUI != null)
+        {
+            levelUpUI.SetActive(false);
+        }
+
+        // Load the next level    
+        LevelManager.Instance.LoadNextLevel();
+        // Reset players' positions
+        SetUpPlayers();
+    }
+    
     private int CalculateHighScore(int score, float timeTaken)
     {
         // Calculate the time remaining
@@ -379,6 +538,8 @@ public class GameManager : Singleton<GameManager>
             winScreenUI.SetActive(false);
         }
         
+        ScoreManager.Instance.SaveHighScores();
+        TotalGameScore = 0;
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -403,7 +564,6 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 0f;  
         pauseMenuUI.SetActive(true);  
         ScoreManager.Instance.SaveHighScores();
-
     }
 
     private void ResumeGame()
@@ -434,7 +594,6 @@ public class GameManager : Singleton<GameManager>
         {
             audioSource.PlayOneShot(winSound); 
         }
-
     }
 
     private void PlayLoseSound()

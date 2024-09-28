@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestionMarkBlock : MonoBehaviour
 {
@@ -14,9 +15,10 @@ public class QuestionMarkBlock : MonoBehaviour
         AddPoints,
         SubtractPoints,
         DoubleCoins,
-        HalveCoins
+        HalfCoins
     }
 
+    [Header("Block Settings")]
     [SerializeField] private BlockEffect blockEffect;
 
     private bool _isHit = false;
@@ -50,36 +52,64 @@ public class QuestionMarkBlock : MonoBehaviour
                 _isHit = true;
                 _animator.SetTrigger("Hit");
                 StartCoroutine(JumpUpAndDown());
-                ApplyEffect(FindObjectOfType<PlayerController>());
+                // Identify which player is colliding and show the message
+                PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+
+                if (player != null)
+                {
+                    // Check the type of player and set the message accordingly
+                    string playerName = "";
+
+                    if (player is MarioController)
+                    {
+                        playerName = "Mario";
+                    }
+                    else if (player is ShrekController)
+                    {
+                        playerName = "Shrek";
+                    }
+
+                    // Construct the message with the player's name
+                    string message = playerName + ":\n";
+                    
+                    ApplyEffect(player, message);
+                }
             }
         }
     }
 
-    private void ApplyEffect(PlayerController player)
+    private void ApplyEffect(PlayerController player, string message)
     {
         switch (blockEffect)
         {
             case BlockEffect.HigherJump:
                 player.SetJumpForceMultiplier(1.5f);
+                message += "Higher Jump for 5 seconds!";
                 break;
             case BlockEffect.LowerJump:
                 player.SetJumpForceMultiplier(0.5f);
+                message += "Lower Jump for 5 seconds!";
                 break;
             case BlockEffect.AddPoints:
                 ScoreManager.Instance.AddScore(50);
+                message += "+ 50 points!";
                 break;
             case BlockEffect.SubtractPoints:
                 ScoreManager.Instance.AddScore(-50);
+                message += "- 50 points!";
                 break;
             case BlockEffect.DoubleCoins:
                 player.SetCoinMultiplier(2, 10f);
+                message += "Coins Doubled!";
                 break;
-            case BlockEffect.HalveCoins:
+            case BlockEffect.HalfCoins:
                 player.SetCoinMultiplier(0.5f, 10f);
+                message += "Coins Halved!";
                 break;
         }
+        // Show the message using the power-up text prefab
+        GameManager.Instance.ShowPopUpMessage(message);
     }
-
     private bool IsGoodEffect()
     {
         return blockEffect == BlockEffect.HigherJump || blockEffect == BlockEffect.AddPoints || blockEffect == BlockEffect.DoubleCoins;

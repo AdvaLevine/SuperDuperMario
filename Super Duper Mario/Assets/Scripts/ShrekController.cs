@@ -6,9 +6,9 @@ using UnityEngine;
 public class ShrekController : PlayerController
 {
     private int playerID = 2;
-    
     protected override void Update()
     {
-        UpdatePlayer(playerID); 
+        int totalPlayers = GameManager.Instance.NumberOfPlayers;
+        UpdatePlayer(playerID, totalPlayers); 
     }
 }
