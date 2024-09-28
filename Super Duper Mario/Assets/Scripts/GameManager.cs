@@ -187,6 +187,9 @@ public class GameManager : Singleton<GameManager>
             else
                 playerObject = Instantiate(_playerPrefabs[i], spawnPosition, Quaternion.identity);
             
+            // Set the layer for the player object
+            playerObject.layer = LayerMask.NameToLayer("Player");
+            
             PlayerController playerController = playerObject.GetComponent<PlayerController>();
             players.Add(playerController);
             

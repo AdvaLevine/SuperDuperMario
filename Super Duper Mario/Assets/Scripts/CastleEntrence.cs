@@ -8,6 +8,11 @@ public class CastleEntrance : MonoBehaviour
     
     // Reference to the temporary camera prefab
     public GameObject tempCameraPrefab;
+    
+    // Keep track of the players that have entered
+    private PlayerController player1;
+    private PlayerController player2;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -18,11 +23,17 @@ public class CastleEntrance : MonoBehaviour
             PlayerController player = other.GetComponent<PlayerController>();
             if (player != null)
             { 
-                // Create a temporary camera before destroying the player
-                InstantiateTempCamera();
+                // Set the player reference
+                if (player1 == null)
+                {
+                    player1 = player;
+                }
+                else if (player2 == null)
+                {
+                    player2 = player;
+                }
 
                 player.SetCanMove(false);
-                Destroy(player.gameObject); // Stop the player from moving
             }
             // Check if it's a two-player game
             if (GameManager.Instance.Players.Count == 2)
@@ -30,12 +41,21 @@ public class CastleEntrance : MonoBehaviour
                 // Check if both players have entered the trigger
                 if (playersInTrigger == 2)
                 {
+                    // Create a temporary camera before destroying the player
+                    InstantiateTempCamera();
+                    // Optionally destroy the players here if desired
+                    Destroy(player1.gameObject);
+                    Destroy(player2.gameObject);
                     // Start a coroutine to handle the win condition
                     StartCoroutine(HandlePlayerWin());
                 }
             }
             else if (GameManager.Instance.Players.Count == 1)
             {
+                // Create a temporary camera before destroying the player
+                InstantiateTempCamera();
+                
+                Destroy(player1.gameObject);
                 // For single player games, win immediately or handle differently
                 StartCoroutine(HandlePlayerWin());
             }
@@ -69,5 +89,6 @@ public class CastleEntrance : MonoBehaviour
         // Now call the PlayerWins method
         GameManager.Instance.PlayerWins();
         
+        playersInTrigger = 0; // Reset the count for future triggers
     }
 }
