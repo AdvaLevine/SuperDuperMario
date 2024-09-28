@@ -6,6 +6,7 @@ The midterm project will be a shameless clone of Super Mario Bros. (1985).
 
 # Game Loop:
 When the user enters the game, a main menu will be displayed where they can choose to start the game. This screen will also display the high scores (fastest completion + most points) as well as an exit button.
+If you press Esc the game is paused, with a matching menu.
 The game will initially support a single-player version.
 After selecting the game mode single
 Once the game starts, the menu will disappear. During the game, the player will jump using the up arrow, causing the character to jump in place. There will be obstacles along the way that either cause the player to lose or delay their progress. The player's goal is to reach the castle as quickly as possible to save the princess, and to also collect the highest score by gathering coins.
