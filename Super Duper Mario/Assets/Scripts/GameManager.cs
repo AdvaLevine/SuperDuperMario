@@ -24,7 +24,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject levelUpUI;
     [SerializeField] private GameObject instructionsUI;
     [SerializeField] private GameObject popUpUI;
-    
+    [SerializeField] private GameObject twoPlayersPopUpUI;
     
     [Header("Time Settings")]
     [SerializeField] private Text _timer; 
@@ -142,10 +142,10 @@ public class GameManager : Singleton<GameManager>
         if (numberOfPlayers == 2)
         {
             CreateDivider();
+            ShowTwoPlayersPopUp();
         }
 
         SetUpPlayers();
-        
         SetUpAudioInGame();
         Camera mainCamera = Camera.main;
         if (mainCamera != null)
@@ -368,6 +368,21 @@ public class GameManager : Singleton<GameManager>
         instructionsUI.SetActive(false);
     }
     
+    public void ShowTwoPlayersPopUp()
+    {
+        if (twoPlayersPopUpUI != null)
+        {
+            twoPlayersPopUpUI.SetActive(true);
+            Invoke("HideTwoPlayersPopUp", 3f);
+        }
+    }
+    public void HideTwoPlayersPopUp()
+    {
+        if (twoPlayersPopUpUI != null)
+        {
+            twoPlayersPopUpUI.SetActive(false);
+        }
+    }
     public void ShowPopUpMessage(string message)
     {
         popUpText = popUpUI.GetComponentInChildren<Text>();
@@ -379,10 +394,6 @@ public class GameManager : Singleton<GameManager>
 
             // Optionally hide the pop-up after a few seconds
             Invoke("HidePopUp", 2f);   // Adjust the duration as needed
-        }
-        else
-        {
-            Debug.LogError("PopUpUI or popUpText is not set up correctly.");
         }
     }
 
