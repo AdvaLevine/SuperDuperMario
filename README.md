@@ -4,6 +4,9 @@ Team Members: Or Hershko and Adva Levine
 # Introduction:
 The midterm project will be a shameless clone of Super Mario Bros. (1985).
 
+## Additional Information - Final Porject
+For more details, check out [README2.md](README2.md).
+
 # Game Loop:
 When the user enters the game, a main menu will be displayed where they can choose to start the game. This screen will also display the high scores (fastest completion + most points) as well as an exit button.
 If you press Esc the game is paused, with a matching menu.
