@@ -13120,8 +13120,8 @@ MonoBehaviour:
   popUpUI: {fileID: 798783577}
   twoPlayersPopUpUI: {fileID: 84438869}
   _timer: {fileID: 888796309}
-  timerText: {fileID: 573368239}
   levelTime: 120
+  timerText: {fileID: 573368239}
   easyButton: {fileID: 13807147}
   _finalScore: {fileID: 1438946555}
   _levelScore: {fileID: 1707260056}
@@ -13255,15 +13255,15 @@ SceneRoots:
   - {fileID: 123102658}
   - {fileID: 594520716}
   - {fileID: 1044356213}
-  - {fileID: 1710750526}
   - {fileID: 1323107722}
+  - {fileID: 1710750526}
   - {fileID: 1396664458}
   - {fileID: 1647852062}
   - {fileID: 248527760}
   - {fileID: 1008906407}
   - {fileID: 340996708}
   - {fileID: 2144659918}
-  - {fileID: 1987123777}
-  - {fileID: 583064910}
   - {fileID: 798783581}
+  - {fileID: 583064910}
   - {fileID: 84438873}
+  - {fileID: 1987123777}
