@@ -13,7 +13,11 @@ public class Monster : MonoBehaviour
 
     private void Start()
     {
-        if(GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.Easy && gameObject.CompareTag("MonsterHard"))
+        if(GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.Easy && (gameObject.CompareTag("MonsterHard") || gameObject.CompareTag("MosterMedium")))
+        {
+            Destroy(gameObject);
+        }
+        if(GameManager.Instance.CurrentDifficulty == GameManager.Difficulty.Medium && gameObject.CompareTag("MonsterHard"))
         {
             Destroy(gameObject);
         }
@@ -41,7 +45,7 @@ public class Monster : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("MonsterHard"))
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("MonsterHard") || collision.gameObject.CompareTag("MonsterMedium"))
         {
             movingRight = !movingRight;
             Flip();

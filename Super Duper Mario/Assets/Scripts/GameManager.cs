@@ -65,6 +65,7 @@ public class GameManager : Singleton<GameManager>
     public enum Difficulty
     {
         Easy,
+        Medium,
         Hard
     }
 
@@ -352,6 +353,19 @@ public class GameManager : Singleton<GameManager>
     public void SetDifficulty(int difficulty)
     {
         CurrentDifficulty = (Difficulty)difficulty;
+        
+        switch (CurrentDifficulty)
+        {
+            case Difficulty.Easy:
+                levelTime = 120f; // 2 minutes for easy
+                break;
+            case Difficulty.Medium:
+                levelTime = 90f; // 1.5 minutes for medium
+                break;
+            case Difficulty.Hard:
+                levelTime = 60f; // 1 minute for hard
+                break;
+        }
     }
 
     public void ShowHighScore()
