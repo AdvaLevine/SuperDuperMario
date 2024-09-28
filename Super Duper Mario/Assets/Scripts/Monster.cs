@@ -45,8 +45,9 @@ public class Monster : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Monster") || collision.gameObject.CompareTag("MonsterHard") || collision.gameObject.CompareTag("MonsterMedium"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
+            // Reverse direction when hitting obstacles
             movingRight = !movingRight;
             Flip();
         }
@@ -65,6 +66,12 @@ public class Monster : MonoBehaviour
                 player.Die();
             }
         }
+        else if (collision.gameObject.CompareTag("Monster") ||
+                 collision.gameObject.CompareTag("MonsterHard") || 
+                 collision.gameObject.CompareTag("MonsterMedium"))
+        {
+            // Prevent flipping direction if two monsters (of any type) collide with each other
+            return;
     }
     
     private void Flip()
