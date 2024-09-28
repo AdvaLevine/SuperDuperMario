@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,20 +15,20 @@ public class PlayerController : MonoBehaviour
     [Header("Score Settings")]
     [SerializeField] private int pointMultiplier = 20; // Points per distance traveled
     private Vector3 lastPosition;
-    private float distanceTraveled = 0f;
-    private float timer = 0f;
+    private float distanceTraveled;
+    private float timer;
     private float scoreUpdateInterval = 1f; // Update score every 1 seconds
 
     // Animation settings
     private bool facingRight = true; //check if the player is facing right
-    protected float moveInput; //the input for the movement
-    protected bool jumpInput; //the input for the jump
-    protected bool isGrounded; //check if the player is on the ground
+    private float moveInput; //the input for the movement
+    private bool jumpInput; //the input for the jump
+    private bool isGrounded; //check if the player is on the ground
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip jumpSound; 
     private AudioSource audioSource;
-    private bool isJumpMuted = false; 
+    private bool isJumpMuted; 
 
     private Rigidbody2D _rb;    
     

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : Singleton<LevelManager>
 {
     public GameObject[] levelBackgrounds; // Array of level backgrounds
-    private int currentLevelIndex = 0;
+    private int currentLevelIndex;
     private GameObject currentBackground;
     
     public int CurrentLevelIndex => currentLevelIndex; // Add this line to expose the current level index

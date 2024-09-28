@@ -99,6 +99,20 @@ public class GameManager : Singleton<GameManager>
         {
             UpdateTimer();
         }
+        // foreach (var player in players)
+        // {
+        //     if (player != null)
+        //     {
+        //         GameObject playerCamera = player.GetComponentInChildren<Camera>();
+        //         if (playerCamera != null)
+        //         {
+        //             if (playerCamera.transform.position.y < 2.18f)
+        //             {
+        //                 playerCamera.transform.position = new Vector3(playerCamera.transform.position.x, 2.18f, playerCamera.transform.position.z);
+        //             }
+        //         }
+        //     }
+        // }
     }
     
     public void StartGame()

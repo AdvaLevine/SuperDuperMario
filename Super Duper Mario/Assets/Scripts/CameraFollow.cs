@@ -16,7 +16,7 @@ public class CameraFollow : MonoBehaviour
         if(PlayerTransform != null)
         {
             float targetX = Mathf.Max(_cameraMinX, Mathf.Min(_cameraMaxX, PlayerTransform.position.x));
-            transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
+            transform.position = new Vector3(targetX, Mathf.Max(-2.18f, PlayerTransform.position.y), transform.position.z);
             transform.rotation = Quaternion.identity;
         }
     }

@@ -1983,7 +1983,6 @@ Transform:
   - {fileID: 4110592535111383677}
   - {fileID: 5787112977267973441}
   - {fileID: 1760094292283556253}
-  - {fileID: 8403213715483934274}
   - {fileID: 4155716139481947221}
   - {fileID: 582455124857926037}
   - {fileID: 7816693208832865777}
@@ -13297,76 +13296,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4335963278284627300, guid: ba6e2a5e6a65c124cb5809f732fc2c93, type: 3}
   m_PrefabInstance: {fileID: 531446263330772097}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1006145500095301273
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2330449065682578512}
-    m_Modifications:
-    - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: moveSpeed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_Name
-      value: Monster (6)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_TagString
-      value: MonsterHard
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.259
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.329
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.6772673
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
---- !u!4 &8403213715483934274 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
-  m_PrefabInstance: {fileID: 1006145500095301273}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1156252189237356275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15233,7 +15162,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: moveSpeed
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_Name
@@ -15685,6 +15614,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2330449065682578512}
     m_Modifications:
+    - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
+      propertyPath: moveSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_Name
       value: Monster (19)
@@ -15695,11 +15628,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.201
+      value: 6.15
       objectReference: {fileID: 0}
     - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.267
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16021,11 +15954,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.49
+      value: 2.15
       objectReference: {fileID: 0}
     - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 8748447173061245147, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16203,7 +16136,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: moveSpeed
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_Name
@@ -16411,6 +16344,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2330449065682578512}
     m_Modifications:
+    - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
+      propertyPath: moveSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_Name
       value: Monster (20)
@@ -16541,7 +16478,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: moveSpeed
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_Name
@@ -17051,6 +16988,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2330449065682578512}
     m_Modifications:
+    - target: {fileID: 1623682147788933758, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
+      propertyPath: moveSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3539105364463691660, guid: 71e20034e83824696a14b9fe2f2d210b, type: 3}
       propertyPath: m_Name
       value: Monster (10)
