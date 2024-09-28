@@ -21,3 +21,6 @@ An **instructions menu** has been added to help new players understand game mech
 ## Scoring System
 ### Score Tracking
 Players earn scores for each level they complete. In **two-player mode**, the score is calculated only if both players successfully complete the level, resulting in a **combined score** for their achievements.
+
+## Ecsape to pause game
+When player press esc the game is paused 
