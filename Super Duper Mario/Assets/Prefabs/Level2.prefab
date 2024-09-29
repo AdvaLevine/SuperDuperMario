@@ -1080,8 +1080,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1544994234870209945}
   - component: {fileID: 6121369298899750654}
-  m_Layer: 0
-  m_Name: Stone
+  m_Layer: 8
+  m_Name: Monster Stop4
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2288,9 +2288,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6774925029480668085}
   - component: {fileID: 1258508950020547900}
-  m_Layer: 0
-  m_Name: Bush (2)
-  m_TagString: Untagged
+  m_Layer: 8
+  m_Name: Monster Stop
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4319,8 +4319,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5855098296408586815}
   - component: {fileID: 7719556345178708086}
-  m_Layer: 0
-  m_Name: Bush (5)
+  m_Layer: 8
+  m_Name: Monster Stop2
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9619,8 +9619,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1891646793544352896}
   - component: {fileID: 2187379408276618532}
-  m_Layer: 0
-  m_Name: Stone (2)
+  m_Layer: 8
+  m_Name: Monster Stop3
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -4869,8 +4869,8 @@ GameObject:
   m_Component:
   - component: {fileID: 21983295033934248}
   - component: {fileID: 4068412767468342249}
-  m_Layer: 0
-  m_Name: The Alps (3)
+  m_Layer: 8
+  m_Name: Monster Stop2
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8322,8 +8322,8 @@ GameObject:
   m_Component:
   - component: {fileID: 39763219783967116}
   - component: {fileID: 1284539821028793502}
-  m_Layer: 0
-  m_Name: The Alps (4)
+  m_Layer: 8
+  m_Name: Monster Stop
   m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
