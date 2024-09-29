@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -32,5 +30,4 @@ public class LevelManager : Singleton<LevelManager>
         // Load the new background
         currentBackground= Instantiate(levelBackgrounds[levelIndex], new Vector3(-3.9f, -4.5f, 0), Quaternion.identity);
     }
-    
 }

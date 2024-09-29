@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class QuestionMarkBlock : MonoBehaviour
 {
@@ -138,5 +137,4 @@ public class QuestionMarkBlock : MonoBehaviour
 
         transform.position = originalPosition;
     }
-    
 }
