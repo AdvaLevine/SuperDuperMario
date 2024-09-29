@@ -22,5 +22,9 @@ An **instructions menu** has been added to help new players understand game mech
 ### Score Tracking
 Players earn scores for each level they complete. In **two-player mode**, the score is calculated only if both players successfully complete the level, resulting in a **combined score** for their achievements.
 
+## Difficulties
+### adding medium and hard
+The new version of the game includes 3 levels of difficulty- easy, meduim and hard where they diffrenciate with different time to the level, different number of monster and even faster monsters, in both hard and medium levels theres no indication whether the question mark box is good or bad, where the easy level as before had that indication.
+
 ## Ecsape to pause game
 When player press esc the game is paused 
