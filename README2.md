@@ -2,7 +2,7 @@
 
 ## Levels
 ### Three Levels
-The game now includes a total of **three levels**. After completing the first level, players will transition to the second level, which features distinct backgrounds, varying floor placements, pipes, coins, and more.
+The game now includes a total of **three levels**. After completing a level, players will transition to the next level, which features distinct backgrounds, varying floor placements, pipes, coins, and more.
 
 ## Multiplayer Mode
 ### Two-Player Option
@@ -20,7 +20,8 @@ An **instructions menu** has been added to help new players understand game mech
 
 ## Scoring System
 ### Score Tracking
-Players earn scores for each level they complete. In **two-player mode**, the score is calculated only if both players successfully complete the level, resulting in a **combined score** for their achievements.
+Players earn scores for each level they complete. 
+In **two-player mode**, the score is calculated only if both players successfully complete the level, resulting in a **combined score** for their achievements.
 
 ## Difficulties
 ### adding medium and hard
