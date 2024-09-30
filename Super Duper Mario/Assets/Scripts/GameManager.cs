@@ -25,6 +25,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject instructionsUI;
     [SerializeField] private GameObject popUpUI;
     [SerializeField] private GameObject twoPlayersPopUpUI;
+    [SerializeField] private GameObject onePlayerPopUpUI;
     private Text popUpText;
 
     [Header("Time Settings")]
@@ -124,6 +125,10 @@ public class GameManager : Singleton<GameManager>
         {
             CreateDivider(); // Create a divider for split-screen
             ShowTwoPlayersPopUp(); // Show a pop-up message for two players
+        }
+        else
+        {
+            showOnePlayerPopUp();
         }
 
         // Set up the players
@@ -389,6 +394,22 @@ public class GameManager : Singleton<GameManager>
         instructionsUI.SetActive(false);
     }
     
+    public void showOnePlayerPopUp()
+    {
+        if (onePlayerPopUpUI != null)
+        {
+            onePlayerPopUpUI.SetActive(true);
+            Invoke("HideOnePlayerPopUp", 3f);
+        }
+    }
+    
+    public void HideOnePlayerPopUp()
+    {
+        if (onePlayerPopUpUI != null)
+        {
+            onePlayerPopUpUI.SetActive(false);
+        }
+    }
     public void ShowTwoPlayersPopUp()
     {
         if (twoPlayersPopUpUI != null)
