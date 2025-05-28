@@ -1,68 +1,100 @@
-# Midterm Project - VR Development & Unity Course
-Team Members: Or Hershko and Adva Levine
+<h1 align="center">🍄 Super Duper Mario Clone</h1>
 
-# Introduction:
-The midterm project will be a shameless clone of Super Mario Bros. (1985).
+<p align="center">
+🎮 Midterm Project – VR Development & Unity Course  
+👾 By Or Hershko & Adva Levine  
+🛠️ A Unity-powered remake of the 1985 Super Mario Bros. classic
+</p>
 
-## Additional Information - Final Porject
-For more details, check out [README2.md](README2.md).
+---
 
-# Game Loop:
-When the user enters the game, a main menu will be displayed where they can choose to start the game. This screen will also display the high scores (fastest completion + most points) as well as an exit button.
-If you press Esc the game is paused, with a matching menu.
-The game will initially support a single-player version.
-After selecting the game mode single
-Once the game starts, the menu will disappear. During the game, the player will jump using the up arrow, causing the character to jump in place. There will be obstacles along the way that either cause the player to lose or delay their progress. The player's goal is to reach the castle as quickly as possible to save the princess, and to also collect the highest score by gathering coins.
+## 📖 Introduction
 
-We will add an enhanced feature for the "Question Mark Block." When the player hits this block, they will receive one of the following options:
+This project is a shameless (and awesome) clone of the legendary **Super Mario Bros. (1985)**. Built in Unity, it features familiar gameplay with modern twists, bonus effects, and a hidden Easter egg.
 
-Higher jump (good)
-Lower jump (bad)
-Bonus points (good)
-Point deduction (bad)
-Double coins collected for a limited time (good)
-Coin value halved for a limited time (bad)
-Game Levels:
-Currently, we plan to implement one or two levels, depending on progress.
+📦 For final deliverables, see: [README2.md](README2.md)
 
-Difficulty Levels:
-We will create two difficulty levels: Easy and Hard.
+---
 
-In Easy Mode:
+## 🎮 Game Loop Overview
 
-There will be fewer enemies.
-Question Mark Blocks that give good rewards will be green, while those that give bad rewards will be red.
+- 🏠 Start at the **Main Menu**: play, view high scores, or exit.
+- ⏸️ Press `Esc` anytime to **pause** the game.
+- 👤 **Single-player** mode is supported.
+- 🏃 Navigate levels, **jump** (⬆️), dodge obstacles, collect **coins**, and **reach the castle** to save the princess.
+- ❓ Hit **Question Mark Blocks** for random effects — good or bad!
+- 👹 **Enemies** can be defeated by jumping on them.
+- 🏆 **High scores** (fastest & most points) are tracked and celebrated.
 
-In Hard Mode:
+---
 
-There will be more enemies.
-There will be no indication of whether a Question Mark Block gives a good or bad reward.
+## 🎁 Question Mark Block Bonuses
 
-Throughout the game, there will be monsters. If the player collides with a monster, they lose, and the game ends. However, if the player jumps on the monster's head, the monster dies, and the player earns points, allowing the game to continue.
+| Effect                    | Type   |
+|---------------------------|--------|
+| Higher jump               | ✅ Good |
+| Lower jump                | ❌ Bad  |
+| Bonus points              | ✅ Good |
+| Points deducted           | ❌ Bad  |
+| Double coins (timed)      | ✅ Good |
+| Halved coin value (timed) | ❌ Bad  |
 
-If the player achieves a new high score, a UI element will congratulate them. The main menu will then be shown again.
-At any given time during thr game the player can puse the game using esc button
+---
 
-## THERES AN EASTER EGG!
-If you press shrek character your player is changing to the shrek character, else if you press mario or dont do a thing- you've got mario!
+## 🧱 Game Features
 
+### 🎯 Levels
+- 1–2 full levels planned, based on timeline
 
-# Implementation Details:
-### Scenes:
-The entire game will take place within one scene.
+### 💥 Difficulty Modes
 
-### Packages:
-The game will utilize Unity's 2D physics (with a 2D Rigidbody on the player).
-The game's menus will use Unity's Canvas system.
+#### Easy Mode:
+- Fewer enemies  
+- Colored blocks:  
+  - 🟩 Good rewards  
+  - 🟥 Bad penalties  
 
-# Target Device:
-PC
-# Estimated Submission Date:
-23.09.2024
-# References:
-A short video of a level from the original game:
-https://www.youtube.com/watch?v=DGQGvAwqpbE
-Our hebrew Submission:
-https://docs.google.com/document/d/1EZ9PgSreIArqBijmKz6ybsVsH37PtZwQg7LeI_iUXXE/edit
+#### Hard Mode:
+- More enemies  
+- No color clues on blocks — full chaos mode
 
+### 🐲 Enemies
+- Collide? ❌ You lose  
+- Jump on them? ✅ They die and give points  
 
+### 🎉 Easter Egg
+> Click on the **Shrek** character in the menu to unlock him as a playable character!  
+> Don’t? You’ll play as Mario by default 👨‍🔧
+
+---
+
+## 🛠️ Implementation
+
+### Scenes
+- Entire game is designed within **one Unity scene**
+
+### Unity Features Used
+- 2D Rigidbody for physics and movement  
+- Unity Canvas for UI/menus  
+- Pause menu toggle via `Esc` key  
+
+---
+
+## 💻 Target Platform
+- PC (Windows/macOS)
+
+---
+
+## 📅 Submission Date
+**Estimated:** 23.09.2024
+
+---
+
+## 📹 References & Links
+
+- 🎥 [Original Mario gameplay reference](https://www.youtube.com/watch?v=DGQGvAwqpbE)  
+- 📄 [Our full Hebrew submission document](https://docs.google.com/document/d/1EZ9PgSreIArqBijmKz6ybsVsH37PtZwQg7LeI_iUXXE/edit)
+
+---
+
+<p align="center">Thanks for playing! 🍄</p>
